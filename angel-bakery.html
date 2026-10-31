@@ -300,7 +300,7 @@
         <h2 data-t="navHow">How ordering works</h2>
         <ol class="steps">
           <li><em data-t="step1">Step 1</em><strong data-t="s1h">Choose your treats</strong><span data-t="s1p">Add cookies and cakes to your cart.</span></li>
-          <li><em data-t="step2">Step 2</em><strong data-t="s2h">Pick a date</strong><span data-t="s2p">Choose pickup or delivery, at least 2 days from today.</span></li>
+          <li><em data-t="step2">Step 2</em><strong data-t="s2h">Pick a date</strong><span data-t="s2p">Choose pickup or delivery, at least 2 days from today, Monday to Saturday.</span></li>
           <li><em data-t="step3">Step 3</em><strong data-t="s3h">Send and pay</strong><span data-t="s3p">Send your cart on WhatsApp, pay with Touch 'n Go, and we reply to confirm.</span></li>
           <li><em data-t="step4">Step 4</em><strong data-t="s4h">Enjoy it fresh</strong><span data-t="s4p">Made fresh and packed with care.</span></li>
         </ol>
@@ -324,7 +324,7 @@
             <label><input type="radio" name="method" id="mDelivery" value="delivery"> <span data-t="delivery">Delivery</span></label>
           </div>
         </fieldset>
-        <p class="note pickup-at" id="pickupAt"><span data-t="pickupAt">Pickup at</span> <a href="https://www.google.com/maps/search/?api=1&amp;query=No.%208%2C%20Jalan%20Kota%202/1%2C%20Taman%20Cahaya%20Kota%20Puteri%2C%2081750%20Masai%2C%20Johor" target="_blank" rel="noopener">No. 8, Jalan Kota 2/1, Taman Cahaya Kota Puteri, 81750 Masai, Johor</a></p>
+        <p class="note pickup-at" id="pickupAt"><span data-t="pickupAt">Pickup at</span> <a href="https://www.google.com/maps/search/?api=1&amp;query=No.%208%2C%20Jalan%20Kota%202/1%2C%20Taman%20Cahaya%20Kota%20Puteri%2C%2081750%20Masai%2C%20Johor" target="_blank" rel="noopener">No. 8, Jalan Kota 2/1, Taman Cahaya Kota Puteri, 81750 Masai, Johor</a><br><span data-t="hours">Open Monday to Saturday, 9am to 6pm. Closed on Sundays.</span></p>
         <div class="field" id="addrField" hidden><label for="cAddr" data-t="fAddr">Delivery address</label><textarea id="cAddr" autocomplete="street-address"></textarea></div>
         <div class="field"><label for="cDate" data-t="fDate">Date</label><input type="date" id="cDate" required></div>
         <div class="field"><label for="cNotes" data-t="fNotes">Notes (gift message, allergies)</label><textarea id="cNotes" data-tp="fNotesPh" placeholder="e.g. A gift for Grandma, no nuts please"></textarea></div>
@@ -360,7 +360,7 @@
   <div class="wrap">
     <span data-t="foot1">Angel Bakery, homemade with love</span>
     <span data-t="foot2">Baked fresh to order</span>
-    <address><a href="https://www.google.com/maps/search/?api=1&amp;query=No.%208%2C%20Jalan%20Kota%202/1%2C%20Taman%20Cahaya%20Kota%20Puteri%2C%2081750%20Masai%2C%20Johor" target="_blank" rel="noopener">No. 8, Jalan Kota 2/1, Taman Cahaya Kota Puteri, 81750 Masai, Johor</a></address>
+    <address><a href="https://www.google.com/maps/search/?api=1&amp;query=No.%208%2C%20Jalan%20Kota%202/1%2C%20Taman%20Cahaya%20Kota%20Puteri%2C%2081750%20Masai%2C%20Johor" target="_blank" rel="noopener">No. 8, Jalan Kota 2/1, Taman Cahaya Kota Puteri, 81750 Masai, Johor</a><br><span data-t="hours">Open Monday to Saturday, 9am to 6pm. Closed on Sundays.</span></address>
   </div>
 </footer>
 
@@ -377,7 +377,7 @@ const T = {
     priceSoon: "Price coming soon",
     step1: "Step 1", step2: "Step 2", step3: "Step 3", step4: "Step 4",
     s1h: "Choose your treats", s1p: "Add cookies and cakes to your cart.",
-    s2h: "Pick a date", s2p: "Choose pickup or delivery, at least 2 days from today.",
+    s2h: "Pick a date", s2p: "Choose pickup or delivery, at least 2 days from today, Monday to Saturday.",
     s3h: "Send and pay", s3p: "Send your cart on WhatsApp, pay with Touch 'n Go, and we reply to confirm.",
     s4h: "Enjoy it fresh", s4p: "Made fresh and packed with care.",
     total: "Total", fName: "Your name", fMethod: "Pickup or delivery",
@@ -400,6 +400,8 @@ const T = {
     needContact: "Please enter your name so we know who the order is for.",
     needAddr: "Please add a delivery address, or choose pickup.",
     needDate: "Please choose a date at least 2 days from today.",
+    needOpenDay: "We're closed on Sundays. Please choose a day from Monday to Saturday.",
+    hours: "Open Monday to Saturday, 9am to 6pm. Closed on Sundays.",
     notes: "Notes: ",
     when: (method, addr, date) => (method === "delivery" ? "Delivery to " + addr : "Pickup") + " on " + date,
     locale: "en-MY",
@@ -415,7 +417,7 @@ const T = {
     priceSoon: "价格即将公布",
     step1: "第 1 步", step2: "第 2 步", step3: "第 3 步", step4: "第 4 步",
     s1h: "挑选甜点", s1p: "把饼干和蛋糕加入购物车。",
-    s2h: "选择日期", s2p: "选择自取或送货，日期至少在两天后。",
+    s2h: "选择日期", s2p: "选择自取或送货，日期至少在两天后，星期一至星期六。",
     s3h: "发送并付款", s3p: "通过 WhatsApp 发送购物车，用 Touch 'n Go 付款，我们会回复确认。",
     s4h: "新鲜享用", s4p: "新鲜制作，用心包装。",
     total: "总计", fName: "您的姓名", fMethod: "自取或送货",
@@ -438,6 +440,8 @@ const T = {
     needContact: "请填写姓名，让我们知道订单是谁的。",
     needAddr: "请填写送货地址，或选择自取。",
     needDate: "请选择至少两天后的日期。",
+    needOpenDay: "星期日休息，请选择星期一至星期六。",
+    hours: "营业时间：星期一至星期六，早上 9 点至傍晚 6 点。星期日休息。",
     notes: "备注：",
     when: (method, addr, date) => date + " " + (method === "delivery" ? "送货至 " + addr : "自取"),
     locale: "zh-Hans-MY",
@@ -719,12 +723,19 @@ document.querySelectorAll('input[name="method"]').forEach(r => r.addEventListene
 $("#cDate").addEventListener("input", renderStamp);
 
 // Earliest date is two days from today
+// Open Monday to Saturday, so a Sunday can't be chosen
+const isoDate = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const isSunday = iso => new Date(iso + "T00:00").getDay() === 0;
 (function setMinDate() {
   const d = new Date(); d.setDate(d.getDate() + 2);
-  const iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-  $("#cDate").min = iso;
-  if (!$("#cDate").value) $("#cDate").value = iso;
+  $("#cDate").min = isoDate(d);
+  if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+  if (!$("#cDate").value) $("#cDate").value = isoDate(d);
 })();
+$("#cDate").addEventListener("change", () => {
+  if (isSunday($("#cDate").value)) showMsg("warn", "needOpenDay");
+  else if (lastMsg && lastMsg.key === "needOpenDay") { $("#formMsg").hidden = true; lastMsg = null; }
+});
 
 let lastMsg = null;
 function showMsg(kind, key, args) {
@@ -763,6 +774,7 @@ $("#orderForm").addEventListener("submit", e => {
   if (!name) return showMsg("warn", "needContact");
   if (method === "delivery" && !addr) return showMsg("warn", "needAddr");
   if (!date || date < $("#cDate").min) return showMsg("warn", "needDate");
+  if (isSunday(date)) return showMsg("warn", "needOpenDay");
 
   const ref = Date.now().toString(36).slice(-6).toUpperCase();
   const order = {
