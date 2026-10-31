@@ -226,6 +226,9 @@
   }
   @media (max-width: 900px) { .jump.on:not(.away) { display: flex; } }
 
+  .pickup-at { margin-top: -6px; }
+  .pickup-at a, footer address a { color: inherit; font-weight: 600; }
+  footer address { font-style: normal; flex-basis: 100%; }
   footer .wrap { border-top: 1px solid var(--rule); padding-block: 24px 88px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; }
 
   /* The one animated moment: a new line is written onto the chit */
@@ -321,6 +324,7 @@
             <label><input type="radio" name="method" id="mDelivery" value="delivery"> <span data-t="delivery">Delivery</span></label>
           </div>
         </fieldset>
+        <p class="note pickup-at" id="pickupAt"><span data-t="pickupAt">Pickup at</span> <a href="https://www.google.com/maps/search/?api=1&amp;query=No.%208%2C%20Jalan%20Kota%202/1%2C%20Taman%20Cahaya%20Kota%20Puteri%2C%2081750%20Masai%2C%20Johor" target="_blank" rel="noopener">No. 8, Jalan Kota 2/1, Taman Cahaya Kota Puteri, 81750 Masai, Johor</a></p>
         <div class="field" id="addrField" hidden><label for="cAddr" data-t="fAddr">Delivery address</label><textarea id="cAddr" autocomplete="street-address"></textarea></div>
         <div class="field"><label for="cDate" data-t="fDate">Date</label><input type="date" id="cDate" required></div>
         <div class="field"><label for="cNotes" data-t="fNotes">Notes (gift message, allergies)</label><textarea id="cNotes" data-tp="fNotesPh" placeholder="e.g. A gift for Grandma, no nuts please"></textarea></div>
@@ -356,6 +360,7 @@
   <div class="wrap">
     <span data-t="foot1">Angel Bakery, homemade with love</span>
     <span data-t="foot2">Baked fresh to order</span>
+    <address><a href="https://www.google.com/maps/search/?api=1&amp;query=No.%208%2C%20Jalan%20Kota%202/1%2C%20Taman%20Cahaya%20Kota%20Puteri%2C%2081750%20Masai%2C%20Johor" target="_blank" rel="noopener">No. 8, Jalan Kota 2/1, Taman Cahaya Kota Puteri, 81750 Masai, Johor</a></address>
   </div>
 </footer>
 
@@ -376,7 +381,7 @@ const T = {
     s3h: "Send and pay", s3p: "Send your cart on WhatsApp, pay with Touch 'n Go, and we reply to confirm.",
     s4h: "Enjoy it fresh", s4p: "Made fresh and packed with care.",
     total: "Total", fName: "Your name", fMethod: "Pickup or delivery",
-    pickup: "Pickup", delivery: "Delivery", fAddr: "Delivery address", fDate: "Date",
+    pickup: "Pickup", delivery: "Delivery", pickupAt: "Pickup at", fAddr: "Delivery address", fDate: "Date",
     fNotes: "Notes (gift message, allergies)", fNotesPh: "e.g. A gift for Grandma, no nuts please",
     place: "Send order on WhatsApp", noPay: "WhatsApp opens with your order written out. Then you pay with Touch 'n Go eWallet.",
     payH: id => `Pay for order ${id}`, payAmt: "Amount to pay", payNoteLabel: "Write this in the payment note", payee: "Payee",
@@ -414,7 +419,7 @@ const T = {
     s3h: "发送并付款", s3p: "通过 WhatsApp 发送购物车，用 Touch 'n Go 付款，我们会回复确认。",
     s4h: "新鲜享用", s4p: "新鲜制作，用心包装。",
     total: "总计", fName: "您的姓名", fMethod: "自取或送货",
-    pickup: "自取", delivery: "送货", fAddr: "送货地址", fDate: "日期",
+    pickup: "自取", delivery: "送货", pickupAt: "自取地点：", fAddr: "送货地址", fDate: "日期",
     fNotes: "备注（送礼祝福语、过敏信息）", fNotesPh: "例如：送给奶奶的礼物，请不要放坚果",
     place: "通过 WhatsApp 发送订单", noPay: "WhatsApp 会打开并写好您的订单，然后用 Touch 'n Go eWallet 付款。",
     payH: id => `支付订单 ${id}`, payAmt: "应付金额", payNoteLabel: "请在转账备注填写", payee: "收款人",
@@ -708,6 +713,7 @@ document.addEventListener("click", e => {
 
 document.querySelectorAll('input[name="method"]').forEach(r => r.addEventListener("change", () => {
   $("#addrField").hidden = !$("#mDelivery").checked;
+  $("#pickupAt").hidden = $("#mDelivery").checked;
   renderStamp();
 }));
 $("#cDate").addEventListener("input", renderStamp);
