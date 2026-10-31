@@ -1,0 +1,48 @@
+<title>Hello</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,700&family=DM+Sans:wght@400;500&display=swap">
+<style>
+  /* Layout: one quiet screen, a single large greeting set left of center */
+  :root {
+    --bg: #eef3f1;
+    --fg: #17312b;
+    --muted: #5b736c;
+    --accent: #2f7d6a;
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --body: "DM Sans", system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #10201c; --fg: #e4efeb; --muted: #93aca5; --accent: #6cc4ac; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #10201c; --fg: #e4efeb; --muted: #93aca5; --accent: #6cc4ac; color-scheme: dark; }
+
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    display: grid;
+    place-items: center;
+    padding-block: 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    box-sizing: border-box;
+  }
+  main { display: flex; flex-direction: column; gap: 16px; max-width: 40rem; }
+  h1 {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(4rem, 18vw, 10rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h1 b { font-weight: 700; color: var(--accent); }
+  p { margin: 0; font-size: 1.125rem; color: var(--muted); line-height: 1.5; }
+</style>
+
+<main>
+  <h1>Hello<b>.</b></h1>
+  <p>Welcome to my little corner of the web.</p>
+</main>

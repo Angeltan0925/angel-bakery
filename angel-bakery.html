@@ -1,0 +1,1008 @@
+<meta charset="utf-8">
+<title>Angel Bakery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Figtree:wght@400;600;700&family=Noto+Sans+SC:wght@400;600;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+  /* Layout: a kitchen price list on the left; the order is written on a pink carbon-copy chit pinned on the right. Stacks on phones. */
+  :root {
+    /* Colours taken from the Angel Bakery logo: paper, script brown, 天使牌 chili red */
+    --bg: #f5f1ea;
+    --sheet: #fffdf9;
+    --ink: #4a2d18;
+    --muted: #7a5f49;
+    --rule: #e4d9ca;
+    --carbon: #6b4220;
+    --carbon-ink: #fffaf3;
+    --chit: #f9dcd6;
+    --chit-rule: rgba(107, 66, 32, 0.22);
+    --chit-shadow: rgba(74, 45, 24, 0.3);
+    --stamp: #c41e2e;
+    --ok: #2f6b41;
+    --ok-bg: #dcebdf;
+    --warn: #85560a;
+    --warn-bg: #fbefd3;
+    --display: "Zilla Slab", "Noto Serif SC", Rockwell, Georgia, serif;
+    --body: "Figtree", "Noto Sans SC", system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1612; --sheet: #251d18; --ink: #f1e6da; --muted: #bba795; --rule: #3a2e26;
+      --carbon: #e9cba8; --carbon-ink: #2a1a0e; --chit: #3d2727; --chit-rule: rgba(233, 203, 168, 0.22); --chit-shadow: rgba(0, 0, 0, 0.5);
+      --stamp: #ff8088; --ok: #8fd6a5; --ok-bg: #183322; --warn: #f1c46b; --warn-bg: #362c14;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1612; --sheet: #251d18; --ink: #f1e6da; --muted: #bba795; --rule: #3a2e26;
+    --carbon: #e9cba8; --carbon-ink: #2a1a0e; --chit: #3d2727; --chit-rule: rgba(233, 203, 168, 0.22); --chit-shadow: rgba(0, 0, 0, 0.5);
+    --stamp: #ff8088; --ok: #8fd6a5; --ok-bg: #183322; --warn: #f1c46b; --warn-bg: #362c14;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 16px; line-height: 1.55;
+  }
+  .wrap {
+    max-width: 1120px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; margin: 0; text-wrap: balance; }
+  p { margin: 0; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--carbon); outline-offset: 2px; }
+  .price, .total, .stamp { font-variant-numeric: tabular-nums lining-nums; }
+
+  /* Header */
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 18px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .brand { align-items: baseline; }
+  .brand span { font-family: var(--display); font-size: 1.45rem; font-weight: 700; }
+  .brand b { font-family: "Noto Serif SC", serif; font-weight: 700; color: var(--stamp); font-size: 1.15rem; }
+  .right { display: flex; align-items: center; gap: 12px 24px; flex-wrap: wrap; }
+  nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  nav a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+  nav a:hover { color: var(--carbon); }
+  .cart-link { display: inline-flex; align-items: center; gap: 6px; }
+  .count { background: var(--stamp); color: #fff; border-radius: 999px; min-width: 20px; padding: 0 6px; font-size: 0.75rem; line-height: 20px; text-align: center; font-variant-numeric: tabular-nums; }
+  .lang { display: flex; gap: 2px; }
+  .lang button { border: 0; background: none; padding: 4px 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; color: var(--muted); border-bottom: 2px solid transparent; }
+  .lang button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--stamp); }
+
+  /* Hero */
+  .hero .wrap { padding-block: 40px 44px; display: grid; gap: 18px; }
+  .hero .logo { width: clamp(150px, 26vw, 250px); height: auto; border-radius: 18px; grid-row: span 3; justify-self: end; align-self: center; }
+  @media (min-width: 700px) { .hero .wrap:has(.logo) { grid-template-columns: minmax(0, 1fr) auto; } .hero .logo { grid-column: 2; grid-row: 1 / span 3; } }
+  @media (max-width: 699px) { .hero .logo { justify-self: start; order: -1; } }
+  .hero h1 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); line-height: 1.02; letter-spacing: -0.01em; max-width: 15ch; }
+  :lang(zh) .hero h1 { max-width: 12em; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.25; }
+  .hero .lede { font-size: 1.15rem; color: var(--muted); max-width: 54ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 6px 22px; list-style: none; padding: 0; margin: 4px 0 0; font-weight: 600; font-size: 0.95rem; }
+  .facts li { display: flex; align-items: center; gap: 8px; }
+  .facts li::before { content: ""; width: 8px; height: 8px; background: var(--stamp); border-radius: 50%; flex: none; }
+
+  /* JB gift picks: the three cookies visitors carry home */
+  .gifts .wrap { padding-block: 0 48px; }
+  .gifts-inner { border-top: 2px solid var(--ink); padding-top: 22px; display: grid; grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); gap: 20px 40px; }
+  @media (max-width: 760px) { .gifts-inner { grid-template-columns: minmax(0, 1fr); } }
+  .gifts h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); line-height: 1.1; color: var(--stamp); }
+  :lang(zh) .gifts h2 { line-height: 1.3; }
+  .gifts .intro p { color: var(--muted); margin-top: 8px; max-width: 34ch; }
+  .picks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; align-self: start; }
+  @media (max-width: 760px) { .picks { grid-template-columns: minmax(0, 1fr); } }
+  .pick { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "pic pic" "name name" "unit unit" "price ctl"; gap: 2px 12px; align-items: center; align-content: start; padding-block: 4px 16px; }
+  @media (min-width: 761px) { .pick + .pick { border-left: 1px solid var(--rule); padding-left: 24px; } }
+  @media (max-width: 760px) { .pick + .pick { border-top: 1px solid var(--rule); padding-top: 14px; } }
+  .pick .pic { grid-area: pic; width: 88px; margin-bottom: 8px; }
+  @media (max-width: 760px) { .pick { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "pic name name" "pic unit unit" "pic price ctl"; column-gap: 14px; } .pick .pic { width: 64px; margin: 0; } }
+  .pick h3 { grid-area: name; font-size: 1.2rem; font-weight: 500; }
+  .pick .unit { grid-area: unit; color: var(--muted); font-size: 0.88rem; }
+  .pick .price { grid-area: price; font-family: var(--display); font-weight: 700; font-size: 1.15rem; margin-top: 8px; }
+  .pick .ctl { grid-area: ctl; margin-top: 8px; }
+
+  /* Main layout */
+  main .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 370px; gap: 40px; padding-block: 0 72px; align-items: start; }
+  @media (max-width: 900px) { main .wrap { grid-template-columns: minmax(0, 1fr); gap: 48px; } }
+
+  /* The price list */
+  .sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 28px clamp(16px, 4vw, 36px) 12px; }
+  .sheet > h2 { font-size: 2rem; margin-bottom: 4px; }
+  .group h3 { font-size: 1.3rem; color: var(--stamp); padding-block: 22px 6px; border-bottom: 2px solid var(--ink); }
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .row {
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "pic name price" "pic desc ctl";
+    gap: 2px 16px; padding-block: 16px; border-bottom: 1px solid var(--rule);
+  }
+  .rows .row:last-child { border-bottom: 0; }
+  .pic { display: block; }
+  .pic svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .pic img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid var(--sheet); box-shadow: 0 0 0 2px var(--carbon); }
+  .pic img + svg { display: none; }
+  .pic.hop img { animation: hop 0.5s cubic-bezier(.3,.7,.3,1); transform-origin: 50% 90%; }
+  .row .pic { grid-area: pic; width: 60px; align-self: start; }
+  @media (max-width: 520px) { .row .pic { width: 46px; } .row { gap: 2px 12px; } }
+  .row .name { grid-area: name; display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; min-width: 0; }
+  .row .name::after { content: ""; flex: 1 1 24px; border-bottom: 2px dotted var(--rule); transform: translateY(-4px); }
+  .row h4 { font-size: 1.2rem; font-weight: 500; }
+  .row .unit { color: var(--muted); font-size: 0.88rem; }
+  .price.soon { font-family: var(--body) !important; font-weight: 600 !important; font-size: 0.88rem !important; color: var(--muted); white-space: nowrap; }
+  .row .price { grid-area: price; font-family: var(--display); font-weight: 700; font-size: 1.2rem; text-align: right; }
+  .row .desc { grid-area: desc; color: var(--muted); font-size: 0.94rem; max-width: 48ch; }
+  .row .ctl { grid-area: ctl; justify-self: end; align-self: start; margin-top: 6px; }
+  .add { border: 1.5px solid var(--carbon); background: none; color: var(--carbon); font-weight: 700; padding: 5px 16px; border-radius: 6px; cursor: pointer; min-height: 36px; }
+  .add:hover { background: var(--carbon); color: var(--carbon-ink); }
+  .stepper { display: inline-flex; align-items: center; background: var(--carbon); color: var(--carbon-ink); border-radius: 6px; }
+  .stepper button { border: 0; background: transparent; width: 36px; height: 36px; cursor: pointer; font-weight: 700; font-size: 1.15rem; color: inherit; }
+  .stepper output { min-width: 22px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .how { margin-top: 56px; display: grid; gap: 18px; }
+  .how h2 { font-size: 1.6rem; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 20px; padding: 0; margin: 0; list-style: none; counter-reset: step; }
+  .steps li { display: grid; gap: 2px; align-content: start; counter-increment: step; }
+  .steps li::before { content: counter(step); font-family: var(--display); font-weight: 700; font-size: 2.2rem; line-height: 1; color: var(--stamp); margin-bottom: 6px; }
+  .steps em { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .steps strong { font-size: 1.05rem; }
+  .steps span { color: var(--muted); font-size: 0.93rem; }
+
+  /* The order chit */
+  aside.chit {
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px);
+    background: var(--chit); color: var(--carbon);
+    padding: 30px 24px 24px; border-radius: 0 0 3px 3px;
+    box-shadow: 0 22px 36px -22px var(--chit-shadow);
+    display: grid; gap: 16px;
+  }
+  /* Torn perforation along the top: holes punched in the page colour */
+  aside.chit::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -6px; height: 12px;
+    background: radial-gradient(circle at 7px 6px, var(--bg) 3.5px, transparent 4px) 0 0 / 14px 12px repeat-x;
+  }
+  @media (max-width: 900px) { aside.chit { position: relative; top: 0; } }
+  .chit-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+  .chit h2 { font-size: 1.6rem; }
+  .stamp {
+    font-family: var(--display); color: var(--stamp); border: 2px solid currentColor; border-radius: 4px;
+    padding: 2px 10px 4px; text-align: center; line-height: 1.15; transform: rotate(-5deg); flex: none;
+  }
+  .stamp small { display: block; font-size: 0.78rem; font-weight: 500; }
+  .stamp strong { font-size: 1.2rem; font-weight: 700; }
+  .lines { display: grid; }
+  .line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; padding-block: 8px; border-bottom: 1px solid var(--chit-rule); }
+  .line .n { font-weight: 600; min-width: 0; }
+  .line .s { opacity: 0.75; font-size: 0.85rem; }
+  .line .p { font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; }
+  .empty { font-size: 0.95rem; padding-block: 10px 14px; border-bottom: 1px solid var(--chit-rule); }
+  .total { display: flex; justify-content: space-between; align-items: baseline; border-top: 3px double var(--carbon); padding-top: 10px; margin-top: -8px; font-family: var(--display); font-weight: 700; font-size: 1.15rem; }
+  .total #total { color: var(--stamp); font-size: 1.6rem; }
+  .chit form { display: grid; gap: 14px; }
+  .field { display: grid; gap: 2px; }
+  .field label, fieldset legend { font-size: 0.85rem; font-weight: 700; }
+  .chit input[type="text"], .chit input[type="tel"], .chit input[type="date"], .chit textarea {
+    width: 100%; border: 0; border-bottom: 1.5px solid var(--chit-rule); background: transparent; color: var(--carbon);
+    padding: 6px 0; border-radius: 0; font-weight: 600;
+  }
+  .chit input:focus-visible, .chit textarea:focus-visible { outline: none; border-bottom-color: var(--carbon); box-shadow: 0 1.5px 0 var(--carbon); }
+  .chit ::placeholder { color: var(--carbon); opacity: 0.5; font-weight: 400; }
+  textarea { resize: vertical; min-height: 56px; }
+  fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
+  .choice { display: flex; gap: 20px; flex-wrap: wrap; }
+  .choice label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; }
+  .choice input { accent-color: var(--carbon); width: 18px; height: 18px; margin: 0; }
+  .submit { border: 0; background: var(--carbon); color: var(--carbon-ink); font-weight: 700; padding: 13px; border-radius: 6px; cursor: pointer; font-size: 1.05rem; margin-top: 4px; }
+  .submit:disabled { opacity: 0.45; cursor: not-allowed; }
+  .note { font-size: 0.85rem; opacity: 0.8; }
+
+  /* DuitNow payment step: replaces the cart lines and form once an order is placed */
+  .chit.paying .lines, .chit.paying .total, .chit.paying #orderForm, .chit.paying .stamp { display: none; }
+  .pay { display: grid; gap: 14px; }
+  .pay-facts { margin: 0; display: grid; gap: 8px; }
+  .pay-facts div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--chit-rule); }
+  .pay-facts dt { font-size: 0.88rem; font-weight: 600; }
+  .pay-facts dd { margin: 0; font-family: var(--display); font-weight: 700; font-size: 1.35rem; color: var(--stamp); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  .qr { margin: 0; display: grid; gap: 8px; justify-items: center; }
+  .qr img { width: 100%; max-width: 240px; background: #fff; padding: 10px; border-radius: 6px; display: block; }
+  .qr a { color: var(--carbon); font-weight: 700; }
+  .text-btn { border: 0; background: none; color: var(--carbon); font-weight: 700; text-decoration: underline; cursor: pointer; justify-self: center; padding: 6px; }
+  .msg { border-radius: 4px; padding: 10px 12px; font-size: 0.93rem; font-weight: 600; }
+  .msg.ok { background: var(--ok-bg); color: var(--ok); }
+  .msg.warn { background: var(--warn-bg); color: var(--warn); }
+
+  /* Phone shortcut to the chit once something is on it */
+  .jump {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); z-index: 5;
+    display: none; gap: 14px; align-items: center; white-space: nowrap;
+    background: var(--carbon); color: var(--carbon-ink); text-decoration: none; font-weight: 700;
+    padding: 12px 20px; border-radius: 6px; box-shadow: 0 10px 24px -10px var(--chit-shadow);
+  }
+  @media (max-width: 900px) { .jump.on:not(.away) { display: flex; } }
+
+  /* Orders lists */
+  .orders { margin-top: 56px; display: grid; gap: 14px; }
+  .orders h2 { font-size: 1.6rem; }
+  .orders .note { color: var(--muted); opacity: 1; }
+  .orders .empty { color: var(--muted); border: 1px dashed var(--rule); border-radius: 4px; padding: 14px; text-align: center; }
+  .orders .list { display: grid; gap: 10px; }
+  .order { background: var(--sheet); border: 1px solid var(--rule); border-left: 4px solid var(--chit); border-radius: 4px; padding: 14px 16px; display: grid; gap: 4px; }
+  .order .top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .order .who { font-weight: 700; }
+  .order .detail { color: var(--muted); font-size: 0.92rem; }
+  .order .detail:empty { display: none; }
+  .pill { font-size: 0.82rem; font-weight: 700; padding: 2px 10px; border-radius: 4px; }
+  .pill.new { background: var(--warn-bg); color: var(--warn); }
+  .pill.confirmed { background: var(--chit); color: var(--stamp); }
+  .pill.ready, .pill.done, .pill.paid { background: var(--ok-bg); color: var(--ok); }
+  .pill.unpaid { background: var(--warn-bg); color: var(--warn); }
+  .pill.submitted { background: var(--chit); color: var(--stamp); }
+  .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .actions button { border: 1.5px solid var(--carbon); background: none; color: var(--carbon); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-weight: 600; font-size: 0.88rem; }
+  .actions button:hover { background: var(--carbon); color: var(--carbon-ink); }
+
+  footer .wrap { border-top: 1px solid var(--rule); padding-block: 24px 88px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; }
+
+  /* The one animated moment: a new line is written onto the chit */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+    .line.fresh .n, .line.fresh .p { animation: write 0.5s cubic-bezier(.3,.7,.3,1); }
+    /* The treat you just added gives a little hop */
+    @keyframes hop { 0% { transform: none; } 35% { transform: translateY(-9px) rotate(-7deg); } 65% { transform: translateY(0) rotate(4deg); } 100% { transform: none; } }
+    .pic.hop svg { animation: hop 0.5s cubic-bezier(.3,.7,.3,1); transform-origin: 50% 90%; }
+    .line.fresh .p { animation-delay: 0.2s; animation-fill-mode: backwards; }
+    .add, .submit, .stepper button { transition: transform .12s; }
+    .add:active, .submit:active, .stepper button:active { transform: scale(0.95); }
+  }
+</style>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#menu">
+      <span>Angel Bakery</span><b lang="zh-Hant">天使牌</b>
+    </a>
+    <div class="right">
+      <nav aria-label="Sections">
+        <a href="#menu" data-t="navMenu">Menu</a>
+        <a href="#how" data-t="navHow">How ordering works</a>
+        <a href="#order" class="cart-link"><span data-t="navOrder">Your cart</span><span class="count" id="cartCount" hidden></span></a>
+      </nav>
+      <div class="lang" role="group" aria-label="Language / 语言">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <img class="logo" src="angel-logo.jpg" alt="Angel Bakery 天使牌 logo" width="600" height="600" onerror="this.remove()">
+    <h1 data-t="h1">Handmade festive cookies and crispy snacks.</h1>
+    <p class="lede" data-t="lede">Every batch is made by hand in our kitchen, in small lots. Pick your favourites below and we'll make them fresh for you.</p>
+    <ul class="facts">
+      <li data-t="fact1">Order 2 days ahead</li>
+      <li data-t="fact2">Pickup or local delivery</li>
+      <li data-t="fact3">Handmade in small batches</li>
+    </ul>
+  </div>
+</section>
+
+<section class="gifts" aria-labelledby="giftTitle">
+  <div class="wrap">
+    <div class="gifts-inner">
+      <div class="intro">
+        <h2 id="giftTitle" data-t="giftH">Visiting JB? Take some home as gifts.</h2>
+        <p data-t="giftP">Our cookies and snacks pack easily, ready to carry back for family and friends.</p>
+      </div>
+      <ul class="picks" id="giftList" data-zone="gifts"></ul>
+    </div>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+    <div>
+      <section class="sheet" id="menu" aria-labelledby="menuTitle">
+        <h2 id="menuTitle" data-t="menu">Menu</h2>
+        <div id="menuGrid" data-zone="menu"></div>
+      </section>
+
+      <section class="how" id="how">
+        <h2 data-t="navHow">How ordering works</h2>
+        <ol class="steps">
+          <li><em data-t="step1">Step 1</em><strong data-t="s1h">Choose your treats</strong><span data-t="s1p">Add cookies and cakes to your cart.</span></li>
+          <li><em data-t="step2">Step 2</em><strong data-t="s2h">Pick a date</strong><span data-t="s2p">Choose pickup or delivery, at least 2 days from today.</span></li>
+          <li><em data-t="step3">Step 3</em><strong data-t="s3h">We confirm</strong><span data-t="s3p">We message you to confirm the order and payment.</span></li>
+          <li><em data-t="step4">Step 4</em><strong data-t="s4h">Enjoy it fresh</strong><span data-t="s4p">Made fresh and packed with care.</span></li>
+        </ol>
+      </section>
+
+      <section class="orders" id="myOrders" hidden>
+        <h2 data-t="placed">Orders you've placed</h2>
+        <div class="list" id="myOrderList"></div>
+      </section>
+
+      <section class="orders" id="bakerPanel" hidden>
+        <h2 data-t="toBake">Orders to bake</h2>
+        <p class="note" data-t="ownerOnly">Only you, the bakery owner, can see this list.</p>
+        <div class="list" id="bakerList"></div>
+      </section>
+    </div>
+
+    <aside class="chit" id="order" aria-labelledby="slipTitle">
+      <div class="chit-head">
+        <h2 id="slipTitle" data-t="navOrder">Your cart</h2>
+        <div class="stamp" id="stamp" aria-live="polite"><small id="stampLabel"></small><strong id="stampDate"></strong></div>
+      </div>
+      <div class="lines" id="lines"></div>
+      <div class="total"><span data-t="total">Total</span><span id="total">RM 0.00</span></div>
+      <form id="orderForm" novalidate>
+        <div class="field"><label for="cName" data-t="fName">Your name</label><input type="text" id="cName" autocomplete="name" required></div>
+        <div class="field"><label for="cPhone" data-t="fPhone">Phone or WhatsApp</label><input type="tel" id="cPhone" autocomplete="tel" placeholder="012-345 6789" required></div>
+        <fieldset>
+          <legend data-t="fMethod">Pickup or delivery</legend>
+          <div class="choice">
+            <label><input type="radio" name="method" id="mPickup" value="pickup" checked> <span data-t="pickup">Pickup</span></label>
+            <label><input type="radio" name="method" id="mDelivery" value="delivery"> <span data-t="delivery">Delivery</span></label>
+          </div>
+        </fieldset>
+        <div class="field" id="addrField" hidden><label for="cAddr" data-t="fAddr">Delivery address</label><textarea id="cAddr" autocomplete="street-address"></textarea></div>
+        <div class="field"><label for="cDate" data-t="fDate">Date</label><input type="date" id="cDate" required></div>
+        <div class="field"><label for="cNotes" data-t="fNotes">Notes (gift message, allergies)</label><textarea id="cNotes" data-tp="fNotesPh" placeholder="e.g. A gift for Grandma, no nuts please"></textarea></div>
+        <div id="formMsg" class="msg" role="status" hidden></div>
+        <button type="submit" class="submit" id="placeBtn" disabled data-t="place">Place order</button>
+        <p class="note" data-t="noPay">You'll pay by DuitNow QR on the next step.</p>
+      </form>
+
+      <div class="pay" id="payBox" hidden>
+        <dl class="pay-facts">
+          <div><dt data-t="payAmt">Amount to pay</dt><dd id="payTotal"></dd></div>
+          <div><dt data-t="payNoteLabel">Write this in the payment note</dt><dd id="payOrderId"></dd></div>
+        </dl>
+        <figure class="qr" id="qrBox">
+          <img id="qrImg" alt="DuitNow QR code for Angel Bakery">
+          <figcaption><a id="qrSave" href="duitnow-qr.png" download="angel-bakery-duitnow-qr.png" data-t="qrSave">Save QR to your phone</a></figcaption>
+        </figure>
+        <p class="note" id="qrHow" data-t="qrHow">Scan with any Malaysian bank or e-wallet app.</p>
+        <p class="msg warn" id="qrMissing" data-t="qrMissing" hidden>The QR code isn't available right now. We'll message you with payment details.</p>
+        <form id="paidForm" novalidate>
+          <div class="field"><label for="payRef" data-t="payRef">Payment reference number</label><input type="text" id="payRef" autocomplete="off" data-tp="payRefPh" placeholder="From your bank receipt"></div>
+          <div id="payMsg" class="msg" role="status" hidden></div>
+          <button type="submit" class="submit" id="paidBtn" data-t="paidBtn">I've paid</button>
+        </form>
+        <button type="button" class="text-btn" id="newOrder" data-t="newOrder">Start a new order</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<a class="jump" id="jump" href="#order"><span data-t="navOrder">Your cart</span><span id="jumpTotal"></span></a>
+
+<footer>
+  <div class="wrap">
+    <span data-t="foot1">Angel Bakery, homemade with love</span>
+    <span data-t="foot2">Baked fresh to order</span>
+  </div>
+</footer>
+
+<script>
+const T = {
+  en: {
+    navMenu: "Menu", navHow: "How ordering works", navOrder: "Your cart",
+    eyebrow: "Homemade · baked to order",
+    h1: "Handmade festive cookies and crispy snacks.",
+    lede: "Every batch is made by hand in our kitchen, in small lots. Pick your favourites below and we'll make them fresh for you.",
+    fact1: "Order 2 days ahead", fact2: "Pickup or local delivery", fact3: "Handmade in small batches",
+    giftH: "Visiting JB? Take some home as gifts.",
+    giftP: "Our cookies and snacks pack easily, ready to carry back for family and friends.",
+    menu: "Menu", all: "All", cookies: "Cookies", snacks: "Crispy snacks", cakes: "Cakes",
+    priceSoon: "Price coming soon",
+    step1: "Step 1", step2: "Step 2", step3: "Step 3", step4: "Step 4",
+    s1h: "Choose your treats", s1p: "Add cookies and cakes to your cart.",
+    s2h: "Pick a date", s2p: "Choose pickup or delivery, at least 2 days from today.",
+    s3h: "We confirm", s3p: "We message you to confirm the order and payment.",
+    s4h: "Enjoy it fresh", s4p: "Made fresh and packed with care.",
+    placed: "Orders you've placed", toBake: "Orders to bake", ownerOnly: "Only you, the bakery owner, can see this list.",
+    total: "Total", fName: "Your name", fPhone: "Phone or WhatsApp", fMethod: "Pickup or delivery",
+    pickup: "Pickup", delivery: "Delivery", fAddr: "Delivery address", fDate: "Date",
+    fNotes: "Notes (gift message, allergies)", fNotesPh: "e.g. A gift for Grandma, no nuts please",
+    place: "Place order and pay", noPay: "You'll pay by DuitNow QR on the next step.",
+    payH: id => `Pay for order ${id}`, payAmt: "Amount to pay", payNoteLabel: "Write this in the payment note",
+    qrSave: "Save QR to your phone", qrAlt: "DuitNow QR code for Angel Bakery",
+    qrHow: "Scan with any Malaysian bank or e-wallet app. Paying on this phone? Save the QR, then upload it in your app.",
+    qrMissing: "The QR code isn't available right now. We'll message you with payment details.",
+    payRef: "Payment reference number", payRefPh: "From your bank receipt",
+    needRef: "Enter the reference number from your payment receipt.",
+    paidBtn: "I've paid", newOrder: "Start a new order", payNow: "Pay with DuitNow",
+    paidThanks: id => `Thank you! We'll check your payment for order ${id} and message you to confirm.`,
+    paidFailed: "We couldn't save your reference. Check your connection and press I've paid again.",
+    payState: { unpaid: "Not paid", submitted: "Payment to check", paid: "Paid" },
+    payRefShown: "DuitNow ref: ", markPaid: "Mark paid",
+    checkHint: (amt, id) => `Check your bank app for ${amt} with note ${id} before marking it paid.`,
+    foot1: "Every sweet comes from Angel", foot2: "Handmade and baked fresh to order",
+    stampPick: "Pickup", stampDel: "Delivery",
+    add: "Add to cart", less: "One less", more: "One more",
+    emptySlip: "Your cart is empty. Tap <strong>Add to cart</strong> on anything from the menu.",
+    needItem: "Add at least one item to your cart first.",
+    needContact: "Please enter your name and a phone number so we can confirm your order.",
+    needAddr: "Please add a delivery address, or choose pickup.",
+    needDate: "Please choose a date at least 2 days from today.",
+    noDb: "Ordering isn't available in this view. Sign in to claude.ai with an account the bakery has invited, then try again.",
+    thanks: (n, id, p) => `Thank you, ${n}! Order ${id} is in. We'll message you at ${p} to confirm.`,
+    denied: "Your account can't place orders yet. Ask the bakery to share this page with you as a Contributor.",
+    failed: "We couldn't save your order. Check your connection and press Place order again.",
+    loadingMine: "Loading your orders…", unreachMine: "Your orders can't be reached right now.",
+    noneMine: "No orders yet. Your orders will show up here after you place one.",
+    loadingAll: "Loading orders…", unreachAll: "Orders can't be reached right now. They'll appear when the connection returns.",
+    noneAll: "No orders yet. New customer orders will appear here, soonest bake date first.",
+    loadFail: "Orders couldn't be loaded.",
+    order: "Order", notes: "Notes: ",
+    when: (method, addr, date) => (method === "delivery" ? "Delivery to " + addr : "Pickup") + " on " + date,
+    status: { new: "New", confirmed: "Confirmed", ready: "Ready", done: "Collected" },
+    mark: s => "Mark " + s.toLowerCase(), retry: "Couldn't update. Try again",
+    locale: "en-MY",
+  },
+  zh: {
+    navMenu: "菜单", navHow: "如何下单", navOrder: "购物车",
+    eyebrow: "家庭手作 · 接单现烤",
+    h1: "手工年饼与香脆小食",
+    lede: "每一批都在我们的厨房里小批量手工制作。挑选您喜欢的，我们为您新鲜制作。",
+    fact1: "请提前 2 天预订", fact2: "自取或本地送货", fact3: "小批量手工制作",
+    giftH: "来新山必买伴手礼",
+    giftP: "饼干和小食方便携带，带回家送给亲朋好友。",
+    menu: "菜单", all: "全部", cookies: "饼干", snacks: "香脆小食", cakes: "蛋糕",
+    priceSoon: "价格即将公布",
+    step1: "第 1 步", step2: "第 2 步", step3: "第 3 步", step4: "第 4 步",
+    s1h: "挑选甜点", s1p: "把饼干和蛋糕加入购物车。",
+    s2h: "选择日期", s2p: "选择自取或送货，日期至少在两天后。",
+    s3h: "我们确认", s3p: "我们会联系您确认订单和付款。",
+    s4h: "新鲜享用", s4p: "新鲜制作，用心包装。",
+    placed: "已下的订单", toBake: "待烘焙订单", ownerOnly: "只有您（店主）能看到此列表。",
+    total: "总计", fName: "您的姓名", fPhone: "电话或 WhatsApp", fMethod: "自取或送货",
+    pickup: "自取", delivery: "送货", fAddr: "送货地址", fDate: "日期",
+    fNotes: "备注（送礼祝福语、过敏信息）", fNotesPh: "例如：送给奶奶的礼物，请不要放坚果",
+    place: "下单并付款", noPay: "下一步通过 DuitNow QR 付款。",
+    payH: id => `支付订单 ${id}`, payAmt: "应付金额", payNoteLabel: "请在转账备注填写",
+    qrSave: "保存 QR 到手机", qrAlt: "Angel Bakery 的 DuitNow QR 码",
+    qrHow: "用任何马来西亚银行或电子钱包 App 扫描。在同一部手机上付款？请先保存 QR，再在 App 里上传。",
+    qrMissing: "QR 码暂时无法显示。我们会联系您提供付款资料。",
+    payRef: "付款参考编号", payRefPh: "见银行收据",
+    needRef: "请填写付款收据上的参考编号。",
+    paidBtn: "我已付款", newOrder: "开始新订单", payNow: "使用 DuitNow 付款",
+    paidThanks: id => `谢谢您！我们会核对订单 ${id} 的付款，并联系您确认。`,
+    paidFailed: "参考编号未能保存。请检查网络后再次点击“我已付款”。",
+    payState: { unpaid: "未付款", submitted: "待核对付款", paid: "已付款" },
+    payRefShown: "DuitNow 参考编号：", markPaid: "标记为已付款",
+    checkHint: (amt, id) => `请先在银行 App 核对 ${amt}（备注 ${id}），再标记为已付款。`,
+    foot1: "天使牌，用爱手作", foot2: "手工制作，接单新鲜烘焙",
+    stampPick: "自取", stampDel: "送货",
+    add: "加入购物车", less: "减一", more: "加一",
+    emptySlip: "购物车是空的。在菜单中点击<strong>加入购物车</strong>即可。",
+    needItem: "请先把至少一样商品加入购物车。",
+    needContact: "请填写姓名和电话，以便我们确认订单。",
+    needAddr: "请填写送货地址，或选择自取。",
+    needDate: "请选择至少两天后的日期。",
+    noDb: "此页面暂时无法下单。请使用店家邀请的 claude.ai 账号登录后再试。",
+    thanks: (n, id, p) => `谢谢您，${n}！订单 ${id} 已收到。我们会通过 ${p} 联系您确认。`,
+    denied: "您的账号暂时无法下单。请让店家以“参与者”权限把此页面分享给您。",
+    failed: "订单未能保存。请检查网络后再次点击“提交订单”。",
+    loadingMine: "正在加载您的订单…", unreachMine: "暂时无法加载您的订单。",
+    noneMine: "还没有订单。下单后会显示在这里。",
+    loadingAll: "正在加载订单…", unreachAll: "暂时无法连接订单，连接恢复后会自动显示。",
+    noneAll: "还没有订单。新订单会按烘焙日期从近到远显示在这里。",
+    loadFail: "订单加载失败。",
+    order: "订单", notes: "备注：",
+    when: (method, addr, date) => date + " " + (method === "delivery" ? "送货至 " + addr : "自取"),
+    status: { new: "新订单", confirmed: "已确认", ready: "可取货", done: "已取货" },
+    mark: s => "标记为" + s, retry: "更新失败，请重试",
+    locale: "zh-Hans-MY",
+  },
+};
+
+// Prices are null until the bakery confirms them; those items show "Price coming soon" and can't be added yet.
+const MENU = [
+  { id: "pineapple-tarts", cat: "cookie", price: null,
+    en: { name: "Pineapple Tarts", desc: "Golden pastry balls filled with pineapple jam.", unit: "Per jar" },
+    zh: { name: "黄梨酥", desc: "金黄酥皮，包着黄梨馅。", unit: "每罐" } },
+  { id: "moon-salted-egg-cookies", cat: "cookie", price: null,
+    en: { name: "Moon Salted Egg Cookies", desc: "Crescent moon cookies with salted egg, finished with black and white sesame.", unit: "Per jar" },
+    zh: { name: "月亮咸蛋饼", desc: "月亮造型咸蛋饼，撒上黑白芝麻。", unit: "每罐" } },
+  { id: "cashew-nut-cookies", cat: "cookie", price: null,
+    en: { name: "Cashew Nut Cookies", desc: "Crescent cookies, each topped with a whole cashew.", unit: "Per jar" },
+    zh: { name: "腰豆饼", desc: "月牙形饼干，每片都有一整颗腰豆。", unit: "每罐" } },
+  { id: "cheese-cookies", cat: "cookie", price: null,
+    en: { name: "Cheese Cookies", desc: "Buttery cookie bars with a golden, cheesy top.", unit: "Per jar" },
+    zh: { name: "芝士饼", desc: "酥香饼条，表面铺满金黄芝士。", unit: "每罐" } },
+  { id: "almond-cookies", cat: "cookie", price: null,
+    en: { name: "Almond Cookies", desc: "Crumbly almond cookies that melt in your mouth.", unit: "Per jar" },
+    zh: { name: "杏仁饼", desc: "松化杏仁饼，入口即化。", unit: "每罐" } },
+  { id: "snowflake-cookies", cat: "cookie", price: null,
+    en: { name: "Snowflake Cookies", desc: "Light, crispy twists dusted with snowy icing sugar.", unit: "Per jar" },
+    zh: { name: "雪花飘飘", desc: "轻脆小卷，撒满雪白糖粉。", unit: "每罐" } },
+  { id: "chicken-floss-samosa", cat: "snack", price: null,
+    en: { name: "Chicken Floss Samosa", desc: "Crispy pastry triangles filled with chicken floss.", unit: "Per jar" },
+    zh: { name: "鸡丝角", desc: "酥脆三角皮，包着鸡丝。", unit: "每罐" } },
+  { id: "shrimp-crackers-roll", cat: "snack", price: null,
+    en: { name: "Shrimp Crackers Roll", desc: "Thin, crunchy rolls with a dried shrimp filling.", unit: "Per jar" },
+    zh: { name: "虾米条", desc: "香脆小卷，内馅是虾米。", unit: "每罐" } },
+  { id: "fried-crab-sticks", cat: "snack", price: null,
+    en: { name: "Fried Crab Sticks", desc: "Crunchy fried crab stick strips. Hard to stop at one.", unit: "Per jar" },
+    zh: { name: "炸蟹柳", desc: "香脆炸蟹柳，一吃就停不下来。", unit: "每罐" } },
+  { id: "seaweed-crepe", cat: "snack", price: null,
+    en: { name: "Seaweed Crepe", desc: "Crisp crepe sheets layered with seaweed.", unit: "Per jar" },
+    zh: { name: "紫菜饼", desc: "薄脆饼皮夹着紫菜。", unit: "每罐" } },
+  { id: "kek-lapis", cat: "cake", price: null,
+    en: { name: "Kek Lapis (Layer Cake)", desc: "Thin layers baked one at a time, with a caramelised top.", unit: "Per cake" },
+    zh: { name: "千层糕", desc: "一层一层慢慢烤成，表面焦香。", unit: "每条" } },
+];
+const STATUSES = ["new", "confirmed", "ready", "done"];
+const money = n => "RM " + n.toFixed(2);
+const priceText = m => m.price == null ? t("priceSoon") : money(m.price);
+const byId = Object.fromEntries(MENU.map(m => [m.id, m]));
+const GIFTS = ["pineapple-tarts", "moon-salted-egg-cookies", "chicken-floss-samosa"];
+
+// Each treat is drawn as a little character in the spirit of the logo mascot
+const CHARS = {
+  default: { shape: "cookie", body: "#e7b981", bits: "#5a3620", eyes: "happy", mouth: "open" },
+  "kek-lapis": { shape: "cake", body: "#e9b56f", top: "#a8622a", eyes: "dot", mouth: "open" },
+};
+const OUT = "#5a3a1e";
+
+function blob(cx, cy, r, bumps, amp) {
+  let d = "";
+  const n = bumps * 8;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2, rr = r + amp * Math.cos(a * bumps);
+    d += (i ? "L" : "M") + (cx + rr * Math.cos(a)).toFixed(1) + " " + (cy + rr * Math.sin(a)).toFixed(1);
+  }
+  return d + "Z";
+}
+
+function eyesSvg(kind, c) {
+  const line = d => `<path d="${d}" fill="none" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`;
+  const dot = (x, r) => `<circle cx="${x}" cy="47" r="${r}" fill="${c}"/><circle cx="${x + 1.3}" cy="45.6" r="${r / 3}" fill="#fff"/>`;
+  const heart = x => `<path d="M${x} 51.5 l-5 -5 a2.9 2.9 0 0 1 5 -3.6 a2.9 2.9 0 0 1 5 3.6 z" fill="#e2374f"/>`;
+  switch (kind) {
+    case "happy": return line("M33 49 q5 -7 10 0 M57 49 q5 -7 10 0");
+    case "closed": return line("M33 46 q5 5 10 0 M57 46 q5 5 10 0");
+    case "sleepy": return line("M33 47.5 h10 M57 47.5 h10");
+    case "wink": return dot(38, 3.8) + line("M57 49 q5 -7 10 0");
+    case "round": return dot(38, 5) + dot(62, 5);
+    case "heart": return heart(38) + heart(62);
+    default: return dot(38, 3.8) + dot(62, 3.8);
+  }
+}
+
+function mouthSvg(kind, c) {
+  const line = d => `<path d="${d}" fill="none" stroke="${c}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+  switch (kind) {
+    case "open": return `<path d="M43.5 55 q6.5 9 13 0 z" fill="${c}" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/><path d="M47 59.3 q3 -2.4 6 0 q-3 2 -6 0z" fill="#f07c8c"/>`;
+    case "cat": return line("M44 55.5 q3 3.5 6 0 q3 3.5 6 0");
+    case "o": return `<ellipse cx="50" cy="57" rx="3.2" ry="3.8" fill="${c}"/>`;
+    case "tongue": return line("M44.5 55.5 q5.5 5 11 0") + `<path d="M51 57.6 q2.8 7 5.6 -0.6 z" fill="#f07c8c" stroke="${c}" stroke-width="1.6" stroke-linejoin="round"/>`;
+    default: return line("M45 56 q5 5 10 0");
+  }
+}
+
+function faceSvg(ch, dy) {
+  const c = ch.face || "#3b2414";
+  return `<g transform="translate(0 ${dy})">
+    <ellipse cx="29" cy="56" rx="5.5" ry="3.2" fill="#f2879a" opacity="0.6"/><ellipse cx="71" cy="56" rx="5.5" ry="3.2" fill="#f2879a" opacity="0.6"/>
+    ${eyesSvg(ch.eyes, c)}${mouthSvg(ch.mouth, c)}</g>`;
+}
+
+// A real photo in photos/<id>.jpg takes the character's place. Each photo is checked once,
+// so re-drawing the menu never flashes an empty frame for a photo that isn't there.
+const photoOk = {};
+function findPhotos() {
+  MENU.forEach(m => {
+    const im = new Image();
+    im.onload = () => { photoOk[m.id] = true; renderMenu(); };
+    im.src = `photos/${m.id}.jpg`;
+  });
+}
+
+function picHtml(id, name) {
+  const photo = photoOk[id] ? `<img src="photos/${id}.jpg" alt="${name.replace(/"/g, "&quot;")}">` : "";
+  return `<span class="pic${id === hopId ? " hop" : ""}">${photo}${characterSvg(id)}</span>`;
+}
+
+function characterSvg(id) {
+  const ch = CHARS[id] || CHARS.default;
+  let art = "";
+  if (ch.shape === "cookie") {
+    art += `<path d="${blob(50, 52, 37, 9, 2.4)}" fill="${ch.body}" stroke="${OUT}" stroke-width="3" stroke-linejoin="round"/>`;
+    if (ch.bits) {
+      [[27, 32, 3.8], [71, 28, 3.3], [50, 22, 2.8], [20, 58, 3], [80, 55, 3.5], [33, 78, 3.5], [65, 80, 3], [50, 85, 2.4]]
+        .forEach(([x, y, r]) => { art += `<circle cx="${x}" cy="${y}" r="${r}" fill="${ch.bits}"/>`; });
+    }
+    if (ch.ridges) {
+      for (let i = 0; i < 18; i++) {
+        const a = (i / 18) * Math.PI * 2;
+        art += `<path d="M${(50 + 29 * Math.cos(a)).toFixed(1)} ${(52 + 29 * Math.sin(a)).toFixed(1)} L${(50 + 34 * Math.cos(a)).toFixed(1)} ${(52 + 34 * Math.sin(a)).toFixed(1)}" stroke="#c9973c" stroke-width="2.2" stroke-linecap="round"/>`;
+      }
+    }
+    art += faceSvg(ch, 2);
+  } else {
+    art += `<rect x="16" y="38" width="68" height="50" rx="9" fill="${ch.body}" stroke="${OUT}" stroke-width="3"/>`;
+    art += `<path d="M16 54 V47 q0 -9 9 -9 H75 q9 0 9 9 V54 q-4.5 6 -9 0 q-4.5 7 -9.5 0 q-5 7 -10 0 q-5 7 -10 0 q-5 7 -10 0 q-5 7 -10 0 q-4.5 6 -9.5 0z" fill="${ch.top}" stroke="${OUT}" stroke-width="3" stroke-linejoin="round"/>`;
+    if (ch.topper === "cherry") art += `<path d="M50 32 q2 -9 9 -11" fill="none" stroke="#3f6b2a" stroke-width="2.4" stroke-linecap="round"/><circle cx="50" cy="32" r="6.5" fill="#c41e2e" stroke="${OUT}" stroke-width="2.6"/>`;
+    if (ch.topper === "berry") art += `<path d="M43 27 q7 -5 14 0 q-1.5 12 -7 14 q-5.5 -2 -7 -14z" fill="#e0384f" stroke="${OUT}" stroke-width="2.6" stroke-linejoin="round"/><path d="M44 27 l6 -6 l6 6" fill="#4c8a34" stroke="${OUT}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    if (ch.topper === "leaf") art += `<path d="M50 38 q-12 -4 -9 -17 q12 3 9 17z" fill="#4c8a34" stroke="${OUT}" stroke-width="2.6" stroke-linejoin="round"/>`;
+    art += faceSvg(ch, 16);
+  }
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">${art}</svg>`;
+}
+const $ = s => document.querySelector(s);
+
+let lang = "en";
+try { const saved = localStorage.getItem("angel-lang"); if (saved === "zh" || saved === "en") lang = saved; } catch {}
+const t = k => T[lang][k];
+const itemText = (id, fallback) => (byId[id] ? byId[id][lang] : { name: fallback || id, unit: "" });
+
+let cart = {};
+let fresh = null;
+let hopId = null;
+let db = null, me = null, isBaker = false;
+let busy = false;
+let mineDocs = null, allDocs = null, mineState = "loading", allState = "loading";
+
+function applyStatic() {
+  document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll("[data-tp]").forEach(el => { el.placeholder = t(el.dataset.tp); });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+}
+
+function qtyControl(id, qty) {
+  if (byId[id].price == null) return "";
+  return qty
+    ? `<span class="stepper"><button type="button" data-dec="${id}" aria-label="${t("less")}">−</button><output>${qty}</output><button type="button" data-inc="${id}" aria-label="${t("more")}">+</button></span>`
+    : `<button type="button" class="add" data-inc="${id}">${t("add")}</button>`;
+}
+
+function renderGifts() {
+  const list = $("#giftList");
+  list.innerHTML = "";
+  GIFTS.forEach(id => {
+    const m = byId[id], tx = m[lang];
+    const li = document.createElement("li");
+    li.className = "pick";
+    li.innerHTML = `${picHtml(id, tx.name)}<h3></h3><span class="unit"></span><span class="price${m.price == null ? " soon" : ""}">${priceText(m)}</span><div class="ctl">${qtyControl(id, cart[id] || 0)}</div>`;
+    li.querySelector("h3").textContent = tx.name;
+    li.querySelector(".unit").textContent = tx.unit;
+    list.appendChild(li);
+  });
+}
+
+function renderMenu() {
+  renderGifts();
+  const grid = $("#menuGrid");
+  grid.innerHTML = "";
+  [["cookie", "cookies"], ["snack", "snacks"], ["cake", "cakes"]].forEach(([c, key]) => {
+    const sec = document.createElement("section");
+    sec.className = "group";
+    sec.innerHTML = `<h3></h3><ul class="rows"></ul>`;
+    sec.querySelector("h3").textContent = t(key);
+    const ul = sec.querySelector("ul");
+    MENU.filter(m => m.cat === c).forEach(m => {
+      const qty = cart[m.id] || 0, tx = m[lang];
+      const li = document.createElement("li");
+      li.className = "row";
+      li.innerHTML = `
+        ${picHtml(m.id, tx.name)}
+        <div class="name"><h4></h4><span class="unit"></span></div>
+        <span class="price${m.price == null ? " soon" : ""}">${priceText(m)}</span>
+        <p class="desc"></p>
+        <div class="ctl">${qtyControl(m.id, qty)}</div>`;
+      li.querySelector("h4").textContent = tx.name;
+      li.querySelector(".unit").textContent = tx.unit;
+      li.querySelector(".desc").textContent = tx.desc;
+      ul.appendChild(li);
+    });
+    grid.appendChild(sec);
+  });
+}
+
+function cartTotal() { return Object.entries(cart).reduce((s, [id, q]) => s + byId[id].price * q, 0); }
+
+function renderSlip() {
+  const lines = $("#lines");
+  lines.innerHTML = "";
+  const ids = Object.keys(cart);
+  if (!ids.length) lines.innerHTML = `<div class="empty">${t("emptySlip")}</div>`;
+  ids.forEach(id => {
+    const m = byId[id], q = cart[id], tx = m[lang];
+    const row = document.createElement("div");
+    row.className = "line" + (id === fresh ? " fresh" : "");
+    row.innerHTML = `<span class="n"></span><span class="p">${money(m.price * q)}</span><span class="s"></span>`;
+    row.querySelector(".n").textContent = `${q} × ${tx.name}`;
+    row.querySelector(".s").textContent = tx.unit;
+    lines.appendChild(row);
+  });
+  fresh = null;
+  $("#total").textContent = money(cartTotal());
+  $("#jumpTotal").textContent = money(cartTotal());
+  const n = Object.values(cart).reduce((a, q) => a + q, 0);
+  $("#cartCount").textContent = n;
+  $("#cartCount").hidden = !n;
+  $("#jump").classList.toggle("on", ids.length > 0);
+  $("#placeBtn").disabled = !ids.length || busy;
+}
+
+function setQty(id, d, zone) {
+  const q = (cart[id] || 0) + d;
+  if (q <= 0) delete cart[id]; else cart[id] = Math.min(q, 20);
+  if (q > 0) fresh = id;
+  hopId = d > 0 ? id : null;
+  renderMenu(); renderSlip();
+  hopId = null;
+  // The menu is re-drawn, so put focus back on the control that was pressed
+  const box = document.querySelector(`[data-zone="${zone}"]`) || document;
+  const back = box.querySelector(`[data-${d > 0 ? "inc" : "dec"}="${id}"]`) || box.querySelector(`[data-inc="${id}"]`);
+  if (back) back.focus({ preventScroll: true });
+}
+
+// The stamp on the chit shows the collection day the customer has chosen
+function renderStamp() {
+  const v = $("#cDate").value;
+  $("#stamp").hidden = !v;
+  if (!v) return;
+  $("#stampLabel").textContent = t($("#mDelivery").checked ? "stampDel" : "stampPick");
+  $("#stampDate").textContent = new Date(v + "T00:00").toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "short" });
+}
+
+function renderAll() {
+  applyStatic(); renderMenu(); renderSlip(); renderStamp(); renderPay(); renderMine(); renderBaker();
+  if (lastMsg) showMsg(lastMsg.kind, lastMsg.key, lastMsg.args);
+}
+
+document.addEventListener("click", e => {
+  const inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
+  const zone = e.target.closest("[data-zone]")?.dataset.zone;
+  if (inc) setQty(inc.dataset.inc, 1, zone);
+  if (dec) setQty(dec.dataset.dec, -1, zone);
+  const lb = e.target.closest(".lang button");
+  if (lb && lb.dataset.lang !== lang) {
+    lang = lb.dataset.lang;
+    try { localStorage.setItem("angel-lang", lang); } catch {}
+    renderAll();
+  }
+});
+
+document.querySelectorAll('input[name="method"]').forEach(r => r.addEventListener("change", () => {
+  $("#addrField").hidden = !$("#mDelivery").checked;
+  renderStamp();
+}));
+$("#cDate").addEventListener("input", renderStamp);
+
+// Earliest date is two days from today
+(function setMinDate() {
+  const d = new Date(); d.setDate(d.getDate() + 2);
+  const iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  $("#cDate").min = iso;
+  if (!$("#cDate").value) $("#cDate").value = iso;
+})();
+
+let lastMsg = null;
+function showMsg(kind, key, args) {
+  lastMsg = { kind, key, args };
+  const v = T[lang][key];
+  const m = $("#formMsg");
+  m.className = "msg " + kind; m.textContent = typeof v === "function" ? v(...args) : v; m.hidden = false;
+}
+
+$("#orderForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const name = $("#cName").value.trim(), phone = $("#cPhone").value.trim();
+  const method = $("#mDelivery").checked ? "delivery" : "pickup";
+  const addr = $("#cAddr").value.trim(), date = $("#cDate").value, notes = $("#cNotes").value.trim();
+  if (!Object.keys(cart).length) return showMsg("warn", "needItem");
+  if (!name || !phone) return showMsg("warn", "needContact");
+  if (method === "delivery" && !addr) return showMsg("warn", "needAddr");
+  if (!date || date < $("#cDate").min) return showMsg("warn", "needDate");
+  if (!db || !me) return showMsg("warn", "noDb");
+
+  const oid = "o" + Date.now().toString(36);
+  const order = {
+    name, phone, method, address: method === "delivery" ? addr : "", date, notes, lang,
+    items: Object.entries(cart).map(([id, qty]) => ({ id, name: byId[id].en.name, price: byId[id].price, qty })),
+    total: cartTotal(), currency: "MYR", status: "new", placedAt: new Date().toISOString(),
+    payment: { method: "duitnow", status: "unpaid", ref: "" },
+  };
+  busy = true; renderSlip();
+  try {
+    const ref = db.doc("orders/" + me);
+    const snap = await ref.get();
+    if (snap.exists) await ref.update({ [oid]: order });
+    else await ref.set({ [oid]: order });
+    cart = {}; $("#cNotes").value = ""; $("#formMsg").hidden = true; lastMsg = null;
+    renderMenu();
+    openPay(oid, order.total);
+  } catch (err) {
+    showMsg("warn", err && err.code === "permission_denied" ? "denied" : "failed");
+  } finally { busy = false; renderSlip(); }
+});
+
+// ---------- DuitNow QR payment
+let paying = null;      // { oid, total } while the pay view is open
+let payMsg = null;
+let qrOk = false;
+(function findQr() {
+  const im = new Image();
+  im.onload = () => { qrOk = true; $("#qrImg").src = im.src; renderPay(); };
+  im.src = "duitnow-qr.png";
+})();
+
+const shortId = oid => oid.slice(1).toUpperCase();
+
+function openPay(oid, total) {
+  paying = { oid, total }; payMsg = null;
+  $("#payRef").value = "";
+  renderPay();
+  $("#order").scrollIntoView({ block: "start" });
+}
+
+function closePay() {
+  paying = null; payMsg = null;
+  renderPay();
+}
+
+function showPayMsg(kind, key, args) {
+  payMsg = { kind, key, args };
+  renderPay();
+}
+
+function renderPay() {
+  const chit = $("#order");
+  chit.classList.toggle("paying", !!paying);
+  $("#payBox").hidden = !paying;
+  if (!paying) { $("#slipTitle").textContent = t("navOrder"); return; }
+  const id = shortId(paying.oid), done = payMsg && payMsg.kind === "ok";
+  $("#slipTitle").textContent = T[lang].payH(id);
+  $("#payTotal").textContent = money(paying.total);
+  $("#payOrderId").textContent = id;
+  $("#qrImg").alt = t("qrAlt");
+  $("#qrBox").hidden = !qrOk || done;
+  $("#qrHow").hidden = !qrOk || done;
+  $("#qrMissing").hidden = qrOk || done;
+  $("#paidForm").querySelector(".field").hidden = done;
+  $("#paidBtn").hidden = done;
+  const m = $("#payMsg");
+  m.hidden = !payMsg;
+  if (payMsg) { const v = T[lang][payMsg.key]; m.className = "msg " + payMsg.kind; m.textContent = typeof v === "function" ? v(...payMsg.args) : v; }
+}
+
+$("#paidForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!paying) return;
+  const ref = $("#payRef").value.trim();
+  if (!ref) return showPayMsg("warn", "needRef");
+  if (!db || !me) return showPayMsg("warn", "noDb");
+  const { oid } = paying;
+  $("#paidBtn").disabled = true;
+  try {
+    await db.doc("orders/" + me).update({ [oid]: { payment: { method: "duitnow", status: "submitted", ref, submittedAt: new Date().toISOString() } } });
+    showPayMsg("ok", "paidThanks", [shortId(oid)]);
+  } catch (err) {
+    showPayMsg("warn", err && err.code === "permission_denied" ? "denied" : "paidFailed");
+  } finally { $("#paidBtn").disabled = false; }
+});
+
+$("#newOrder").addEventListener("click", () => { closePay(); $("#menu").scrollIntoView(); });
+
+function orderCard(o, oid, uid, forBaker) {
+  const el = document.createElement("div");
+  el.className = "order";
+  const items = (o.items || []).map(i => `${i.qty} × ${itemText(i.id, i.name).name}`).join(", ");
+  const when = new Date(o.date + "T00:00").toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "short" });
+  const st = T[lang].status;
+  const pay = o.payment && o.payment.status, ps = T[lang].payState;
+  el.innerHTML = `<div class="top"><span class="who"></span><span class="pills">${pay ? `<span class="pill ${pay}">${ps[pay] || pay}</span>` : ""}<span class="pill ${o.status}">${st[o.status] || o.status}</span></span></div>
+    <div class="detail d1"></div><div class="detail d2"></div><div class="detail d3"></div><div class="detail d4"></div>`;
+  el.querySelector(".who").textContent = forBaker ? `${o.name} · ${o.phone}` : `${t("order")} ${oid.slice(1).toUpperCase()}`;
+  el.querySelector(".d1").textContent = items + " · " + money(o.total || 0);
+  el.querySelector(".d2").textContent = T[lang].when(o.method, o.address, when);
+  el.querySelector(".d3").textContent = o.notes ? t("notes") + o.notes : "";
+  if (pay && o.payment.ref) {
+    el.querySelector(".d4").textContent = t("payRefShown") + o.payment.ref + (forBaker && pay === "submitted" ? " · " + T[lang].checkHint(money(o.total || 0), shortId(oid)) : "");
+  }
+  const box = document.createElement("div"); box.className = "actions";
+  if (!forBaker && pay === "unpaid") {
+    const b = document.createElement("button"); b.type = "button";
+    b.textContent = t("payNow");
+    b.addEventListener("click", () => openPay(oid, o.total || 0));
+    box.appendChild(b);
+  }
+  if (forBaker && pay && pay !== "paid") {
+    const b = document.createElement("button"); b.type = "button";
+    b.textContent = t("markPaid");
+    b.addEventListener("click", async () => {
+      b.disabled = true;
+      try { await db.doc("orders/" + uid).update({ [oid]: { payment: { ...o.payment, status: "paid", paidAt: new Date().toISOString() } } }); }
+      catch { b.disabled = false; b.textContent = t("retry"); }
+    });
+    box.appendChild(b);
+  }
+  if (forBaker) {
+    const next = STATUSES[STATUSES.indexOf(o.status) + 1];
+    if (next) {
+      const b = document.createElement("button"); b.type = "button";
+      b.textContent = T[lang].mark(st[next]);
+      b.addEventListener("click", async () => {
+        b.disabled = true;
+        try { await db.doc("orders/" + uid).update({ [oid]: { status: next } }); }
+        catch { b.disabled = false; b.textContent = t("retry"); }
+      });
+      box.appendChild(b);
+    }
+  }
+  if (box.children.length) el.appendChild(box);
+  return el;
+}
+
+function flatten(data) {
+  return Object.entries(data || {}).filter(([, o]) => o && typeof o === "object" && o.items);
+}
+
+function renderMine() {
+  if ($("#myOrders").hidden) return;
+  const list = $("#myOrderList");
+  if (mineState !== "ready") { list.innerHTML = `<div class="empty">${t(mineState === "loading" ? "loadingMine" : "unreachMine")}</div>`; return; }
+  const rows = flatten(mineDocs).sort((a, b) => b[1].placedAt.localeCompare(a[1].placedAt));
+  list.innerHTML = rows.length ? "" : `<div class="empty">${t("noneMine")}</div>`;
+  rows.forEach(([oid, o]) => list.appendChild(orderCard(o, oid, me, false)));
+}
+
+function renderBaker() {
+  if ($("#bakerPanel").hidden) return;
+  const list = $("#bakerList");
+  if (allState !== "ready") { list.innerHTML = `<div class="empty">${t({ loading: "loadingAll", unreach: "unreachAll", fail: "loadFail" }[allState])}</div>`; return; }
+  const rows = [];
+  allDocs.forEach(d => flatten(d.data()).forEach(([oid, o]) => rows.push([oid, o, d.id])));
+  rows.sort((a, b) => (a[1].status === "done") - (b[1].status === "done") || a[1].date.localeCompare(b[1].date));
+  list.innerHTML = rows.length ? "" : `<div class="empty">${t("noneAll")}</div>`;
+  rows.forEach(([oid, o, uid]) => list.appendChild(orderCard(o, oid, uid, true)));
+}
+
+function watchMine() {
+  $("#myOrders").hidden = false; renderMine();
+  const timer = setTimeout(() => { if (mineState === "loading") { mineState = "unreach"; renderMine(); } }, 10000);
+  db.doc("orders/" + me).onSnapshot(snap => {
+    clearTimeout(timer); mineDocs = snap.data(); mineState = "ready"; renderMine();
+  }, () => { clearTimeout(timer); $("#myOrders").hidden = true; });
+}
+
+function watchBaker() {
+  $("#bakerPanel").hidden = false; renderBaker();
+  const timer = setTimeout(() => { if (allState === "loading") { allState = "unreach"; renderBaker(); } }, 10000);
+  db.collection("orders").onSnapshot(snap => {
+    clearTimeout(timer); allDocs = snap.docs; allState = "ready"; renderBaker();
+  }, () => { clearTimeout(timer); allState = "fail"; renderBaker(); });
+}
+
+renderAll();
+findPhotos();
+
+// Hide the phone shortcut while the chit itself is on screen
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(([e]) => $("#jump").classList.toggle("away", e.isIntersecting)).observe($("#order"));
+}
+
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  const [dbNs, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+  if (!dbNs || !user) return;
+  db = dbNs;
+  try { me = await user.id(); } catch { me = null; }
+  try { isBaker = !!(await user.isOwner()) || !!(await user.canEdit()); } catch { isBaker = false; }
+  if (me) watchMine();
+  if (isBaker) watchBaker();
+})();
+</script>
