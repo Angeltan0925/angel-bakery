@@ -197,6 +197,7 @@
   .choice input { accent-color: var(--carbon); width: 18px; height: 18px; margin: 0; }
   .submit { border: 0; background: var(--carbon); color: var(--carbon-ink); font-weight: 700; padding: 13px; border-radius: 6px; cursor: pointer; font-size: 1.05rem; margin-top: 4px; }
   .submit:disabled { opacity: 0.45; cursor: not-allowed; }
+  a.submit { display: block; text-align: center; text-decoration: none; }
   .note { font-size: 0.85rem; opacity: 0.8; }
 
   /* Touch 'n Go eWallet payment step: replaces the cart lines and form once an order is placed */
@@ -210,7 +211,7 @@
   .qr { margin: 0; display: grid; gap: 8px; justify-items: center; }
   .qr img { width: 100%; max-width: 240px; background: #fff; padding: 10px; border-radius: 6px; display: block; }
   .qr a { color: var(--carbon); font-weight: 700; }
-  .text-btn { border: 0; background: none; color: var(--carbon); font-weight: 700; text-decoration: underline; cursor: pointer; justify-self: center; padding: 6px; }
+  .text-btn { border: 0; background: none; color: var(--carbon); font-weight: 700; text-decoration: underline; cursor: pointer; justify-self: center; text-align: center; padding: 6px; }
   .msg { border-radius: 4px; padding: 10px 12px; font-size: 0.93rem; font-weight: 600; }
   .msg.ok { background: var(--ok-bg); color: var(--ok); }
   .msg.warn { background: var(--warn-bg); color: var(--warn); }
@@ -224,28 +225,6 @@
     padding: 12px 20px; border-radius: 6px; box-shadow: 0 10px 24px -10px var(--chit-shadow);
   }
   @media (max-width: 900px) { .jump.on:not(.away) { display: flex; } }
-
-  /* Orders lists */
-  .orders { margin-top: 56px; display: grid; gap: 14px; }
-  .orders h2 { font-size: 1.6rem; }
-  .orders .note { color: var(--muted); opacity: 1; }
-  .orders .empty { color: var(--muted); border: 1px dashed var(--rule); border-radius: 4px; padding: 14px; text-align: center; }
-  .orders .list { display: grid; gap: 10px; }
-  .order { background: var(--sheet); border: 1px solid var(--rule); border-left: 4px solid var(--chit); border-radius: 4px; padding: 14px 16px; display: grid; gap: 4px; }
-  .order .top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
-  .order .who { font-weight: 700; }
-  .order .detail { color: var(--muted); font-size: 0.92rem; }
-  .order .detail:empty { display: none; }
-  .pill { font-size: 0.82rem; font-weight: 700; padding: 2px 10px; border-radius: 4px; }
-  .pill.new { background: var(--warn-bg); color: var(--warn); }
-  .pill.confirmed { background: var(--chit); color: var(--stamp); }
-  .pill.ready, .pill.done, .pill.paid { background: var(--ok-bg); color: var(--ok); }
-  .pill.unpaid { background: var(--warn-bg); color: var(--warn); }
-  .pill.submitted { background: var(--chit); color: var(--stamp); }
-  .pills { display: flex; gap: 6px; flex-wrap: wrap; }
-  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .actions button { border: 1.5px solid var(--carbon); background: none; color: var(--carbon); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-weight: 600; font-size: 0.88rem; }
-  .actions button:hover { background: var(--carbon); color: var(--carbon-ink); }
 
   footer .wrap { border-top: 1px solid var(--rule); padding-block: 24px 88px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; }
 
@@ -319,21 +298,11 @@
         <ol class="steps">
           <li><em data-t="step1">Step 1</em><strong data-t="s1h">Choose your treats</strong><span data-t="s1p">Add cookies and cakes to your cart.</span></li>
           <li><em data-t="step2">Step 2</em><strong data-t="s2h">Pick a date</strong><span data-t="s2p">Choose pickup or delivery, at least 2 days from today.</span></li>
-          <li><em data-t="step3">Step 3</em><strong data-t="s3h">We confirm</strong><span data-t="s3p">We message you to confirm the order and payment.</span></li>
+          <li><em data-t="step3">Step 3</em><strong data-t="s3h">Send and pay</strong><span data-t="s3p">Send your cart on WhatsApp, pay with Touch 'n Go, and we reply to confirm.</span></li>
           <li><em data-t="step4">Step 4</em><strong data-t="s4h">Enjoy it fresh</strong><span data-t="s4p">Made fresh and packed with care.</span></li>
         </ol>
       </section>
 
-      <section class="orders" id="myOrders" hidden>
-        <h2 data-t="placed">Orders you've placed</h2>
-        <div class="list" id="myOrderList"></div>
-      </section>
-
-      <section class="orders" id="bakerPanel" hidden>
-        <h2 data-t="toBake">Orders to bake</h2>
-        <p class="note" data-t="ownerOnly">Only you, the bakery owner, can see this list.</p>
-        <div class="list" id="bakerList"></div>
-      </section>
     </div>
 
     <aside class="chit" id="order" aria-labelledby="slipTitle">
@@ -345,7 +314,6 @@
       <div class="total"><span data-t="total">Total</span><span id="total">RM 0.00</span></div>
       <form id="orderForm" novalidate>
         <div class="field"><label for="cName" data-t="fName">Your name</label><input type="text" id="cName" autocomplete="name" required></div>
-        <div class="field"><label for="cPhone" data-t="fPhone">Phone or WhatsApp</label><input type="tel" id="cPhone" autocomplete="tel" placeholder="012-345 6789" required></div>
         <fieldset>
           <legend data-t="fMethod">Pickup or delivery</legend>
           <div class="choice">
@@ -357,8 +325,8 @@
         <div class="field"><label for="cDate" data-t="fDate">Date</label><input type="date" id="cDate" required></div>
         <div class="field"><label for="cNotes" data-t="fNotes">Notes (gift message, allergies)</label><textarea id="cNotes" data-tp="fNotesPh" placeholder="e.g. A gift for Grandma, no nuts please"></textarea></div>
         <div id="formMsg" class="msg" role="status" hidden></div>
-        <button type="submit" class="submit" id="placeBtn" disabled data-t="place">Place order</button>
-        <p class="note" data-t="noPay">You'll pay with Touch 'n Go eWallet on the next step.</p>
+        <button type="submit" class="submit" id="placeBtn" disabled data-t="place">Send order on WhatsApp</button>
+        <p class="note" data-t="noPay">WhatsApp opens with your order written out. Then you pay with Touch 'n Go eWallet.</p>
       </form>
 
       <div class="pay" id="payBox" hidden>
@@ -373,11 +341,9 @@
         </figure>
         <p class="note" id="qrHow" data-t="qrHow">Scan with the Touch 'n Go eWallet app.</p>
         <p class="msg warn" id="qrMissing" data-t="qrMissing" hidden>The QR code isn't available right now. We'll message you with payment details.</p>
-        <form id="paidForm" novalidate>
-          <div class="field"><label for="payRef" data-t="payRef">Payment reference number</label><input type="text" id="payRef" autocomplete="off" data-tp="payRefPh" placeholder="From your Touch 'n Go receipt"></div>
-          <div id="payMsg" class="msg" role="status" hidden></div>
-          <button type="submit" class="submit" id="paidBtn" data-t="paidBtn">I've paid</button>
-        </form>
+        <p class="note" data-t="afterPay">After paying, send a screenshot of your receipt in the same WhatsApp chat.</p>
+        <a class="submit" id="receiptLink" target="_blank" rel="noopener" data-t="receiptBtn">Send receipt on WhatsApp</a>
+        <a class="text-btn" id="resendLink" target="_blank" rel="noopener" data-t="resend">WhatsApp didn't open? Send the order again</a>
         <button type="button" class="text-btn" id="newOrder" data-t="newOrder">Start a new order</button>
       </div>
     </aside>
@@ -397,7 +363,6 @@
 const T = {
   en: {
     navMenu: "Menu", navHow: "How ordering works", navOrder: "Your cart",
-    eyebrow: "Homemade · baked to order",
     h1: "Handmade festive cookies and crispy snacks.",
     lede: "Every batch is made by hand in our kitchen, in small lots. Pick your favourites below and we'll make them fresh for you.",
     fact1: "Order 2 days ahead", fact2: "Pickup or local delivery", fact3: "Handmade in small batches",
@@ -408,51 +373,34 @@ const T = {
     step1: "Step 1", step2: "Step 2", step3: "Step 3", step4: "Step 4",
     s1h: "Choose your treats", s1p: "Add cookies and cakes to your cart.",
     s2h: "Pick a date", s2p: "Choose pickup or delivery, at least 2 days from today.",
-    s3h: "We confirm", s3p: "We message you to confirm the order and payment.",
+    s3h: "Send and pay", s3p: "Send your cart on WhatsApp, pay with Touch 'n Go, and we reply to confirm.",
     s4h: "Enjoy it fresh", s4p: "Made fresh and packed with care.",
-    placed: "Orders you've placed", toBake: "Orders to bake", ownerOnly: "Only you, the bakery owner, can see this list.",
-    total: "Total", fName: "Your name", fPhone: "Phone or WhatsApp", fMethod: "Pickup or delivery",
+    total: "Total", fName: "Your name", fMethod: "Pickup or delivery",
     pickup: "Pickup", delivery: "Delivery", fAddr: "Delivery address", fDate: "Date",
     fNotes: "Notes (gift message, allergies)", fNotesPh: "e.g. A gift for Grandma, no nuts please",
-    place: "Place order and pay", noPay: "You'll pay with Touch 'n Go eWallet on the next step.",
+    place: "Send order on WhatsApp", noPay: "WhatsApp opens with your order written out. Then you pay with Touch 'n Go eWallet.",
     payH: id => `Pay for order ${id}`, payAmt: "Amount to pay", payNoteLabel: "Write this in the payment note", payee: "Payee",
     qrSave: "Save QR to your phone", qrAlt: "Touch 'n Go eWallet QR code for JMCO Trading",
     qrHow: "Scan with the Touch 'n Go eWallet app. You'll see the payee name JMCO Trading. Paying on this phone? Save the QR, then upload it from your photos in the app's scanner.",
-    qrMissing: "The QR code isn't available right now. We'll message you with payment details.",
-    payRef: "Transaction ID", payRefPh: "From your Touch 'n Go receipt",
-    needRef: "Enter the transaction ID from your Touch 'n Go receipt.",
-    paidBtn: "I've paid", newOrder: "Start a new order", payNow: "Pay with Touch 'n Go",
-    paidThanks: id => `Thank you! We'll check your payment for order ${id} and message you to confirm.`,
-    paidFailed: "We couldn't save your transaction ID. Check your connection and press I've paid again.",
-    payState: { unpaid: "Not paid", submitted: "Payment to check", paid: "Paid" },
-    payRefShown: "Touch 'n Go transaction ID: ", markPaid: "Mark paid",
-    checkHint: (amt, id) => `Check your Touch 'n Go eWallet for ${amt} with note ${id} before marking it paid.`,
+    qrMissing: "The QR code isn't available right now. We'll send payment details on WhatsApp.",
+    afterPay: "After paying, send a screenshot of your receipt in the same WhatsApp chat.",
+    receiptBtn: "Send receipt on WhatsApp", resend: "WhatsApp didn't open? Send the order again", newOrder: "Start a new order",
+    waHello: "Hi Angel Bakery! I'd like to order:", waName: "Name", waRef: "Order ref",
+    waReceipt: (id, amt) => `Hi Angel Bakery! Here's my Touch 'n Go receipt for order ${id} (${amt}).`,
     foot1: "Every sweet comes from Angel", foot2: "Handmade and baked fresh to order",
     stampPick: "Pickup", stampDel: "Delivery",
     add: "Add to cart", less: "One less", more: "One more",
     emptySlip: "Your cart is empty. Tap <strong>Add to cart</strong> on anything from the menu.",
     needItem: "Add at least one item to your cart first.",
-    needContact: "Please enter your name and a phone number so we can confirm your order.",
+    needContact: "Please enter your name so we know who the order is for.",
     needAddr: "Please add a delivery address, or choose pickup.",
     needDate: "Please choose a date at least 2 days from today.",
-    noDb: "Ordering isn't available in this view. Sign in to claude.ai with an account the bakery has invited, then try again.",
-    thanks: (n, id, p) => `Thank you, ${n}! Order ${id} is in. We'll message you at ${p} to confirm.`,
-    denied: "Your account can't place orders yet. Ask the bakery to share this page with you as a Contributor.",
-    failed: "We couldn't save your order. Check your connection and press Place order again.",
-    loadingMine: "Loading your orders…", unreachMine: "Your orders can't be reached right now.",
-    noneMine: "No orders yet. Your orders will show up here after you place one.",
-    loadingAll: "Loading orders…", unreachAll: "Orders can't be reached right now. They'll appear when the connection returns.",
-    noneAll: "No orders yet. New customer orders will appear here, soonest bake date first.",
-    loadFail: "Orders couldn't be loaded.",
-    order: "Order", notes: "Notes: ",
+    notes: "Notes: ",
     when: (method, addr, date) => (method === "delivery" ? "Delivery to " + addr : "Pickup") + " on " + date,
-    status: { new: "New", confirmed: "Confirmed", ready: "Ready", done: "Collected" },
-    mark: s => "Mark " + s.toLowerCase(), retry: "Couldn't update. Try again",
     locale: "en-MY",
   },
   zh: {
     navMenu: "菜单", navHow: "如何下单", navOrder: "购物车",
-    eyebrow: "家庭手作 · 接单现烤",
     h1: "手工年饼与香脆小食",
     lede: "每一批都在我们的厨房里小批量手工制作。挑选您喜欢的，我们为您新鲜制作。",
     fact1: "请提前 2 天预订", fact2: "自取或本地送货", fact3: "小批量手工制作",
@@ -463,46 +411,30 @@ const T = {
     step1: "第 1 步", step2: "第 2 步", step3: "第 3 步", step4: "第 4 步",
     s1h: "挑选甜点", s1p: "把饼干和蛋糕加入购物车。",
     s2h: "选择日期", s2p: "选择自取或送货，日期至少在两天后。",
-    s3h: "我们确认", s3p: "我们会联系您确认订单和付款。",
+    s3h: "发送并付款", s3p: "通过 WhatsApp 发送购物车，用 Touch 'n Go 付款，我们会回复确认。",
     s4h: "新鲜享用", s4p: "新鲜制作，用心包装。",
-    placed: "已下的订单", toBake: "待烘焙订单", ownerOnly: "只有您（店主）能看到此列表。",
-    total: "总计", fName: "您的姓名", fPhone: "电话或 WhatsApp", fMethod: "自取或送货",
+    total: "总计", fName: "您的姓名", fMethod: "自取或送货",
     pickup: "自取", delivery: "送货", fAddr: "送货地址", fDate: "日期",
     fNotes: "备注（送礼祝福语、过敏信息）", fNotesPh: "例如：送给奶奶的礼物，请不要放坚果",
-    place: "下单并付款", noPay: "下一步通过 Touch 'n Go eWallet 付款。",
+    place: "通过 WhatsApp 发送订单", noPay: "WhatsApp 会打开并写好您的订单，然后用 Touch 'n Go eWallet 付款。",
     payH: id => `支付订单 ${id}`, payAmt: "应付金额", payNoteLabel: "请在转账备注填写", payee: "收款人",
     qrSave: "保存 QR 到手机", qrAlt: "JMCO Trading 的 Touch 'n Go eWallet QR 码",
     qrHow: "请用 Touch 'n Go eWallet App 扫描，收款人显示为 JMCO Trading。在同一部手机上付款？请先保存 QR，再在 App 的扫描页从相册上传。",
-    qrMissing: "QR 码暂时无法显示。我们会联系您提供付款资料。",
-    payRef: "交易编号", payRefPh: "见 Touch 'n Go 收据",
-    needRef: "请填写 Touch 'n Go 收据上的交易编号。",
-    paidBtn: "我已付款", newOrder: "开始新订单", payNow: "使用 Touch 'n Go 付款",
-    paidThanks: id => `谢谢您！我们会核对订单 ${id} 的付款，并联系您确认。`,
-    paidFailed: "交易编号未能保存。请检查网络后再次点击“我已付款”。",
-    payState: { unpaid: "未付款", submitted: "待核对付款", paid: "已付款" },
-    payRefShown: "Touch 'n Go 交易编号：", markPaid: "标记为已付款",
-    checkHint: (amt, id) => `请先在 Touch 'n Go eWallet 核对 ${amt}（备注 ${id}），再标记为已付款。`,
+    qrMissing: "QR 码暂时无法显示。我们会在 WhatsApp 发送付款资料。",
+    afterPay: "付款后，请在同一个 WhatsApp 对话里发送收据截图。",
+    receiptBtn: "通过 WhatsApp 发送收据", resend: "WhatsApp 没有打开？重新发送订单", newOrder: "开始新订单",
+    waHello: "您好 Angel Bakery！我想订购：", waName: "姓名", waRef: "订单编号",
+    waReceipt: (id, amt) => `您好 Angel Bakery！这是订单 ${id}（${amt}）的 Touch 'n Go 付款收据。`,
     foot1: "天使牌，用爱手作", foot2: "手工制作，接单新鲜烘焙",
     stampPick: "自取", stampDel: "送货",
     add: "加入购物车", less: "减一", more: "加一",
     emptySlip: "购物车是空的。在菜单中点击<strong>加入购物车</strong>即可。",
     needItem: "请先把至少一样商品加入购物车。",
-    needContact: "请填写姓名和电话，以便我们确认订单。",
+    needContact: "请填写姓名，让我们知道订单是谁的。",
     needAddr: "请填写送货地址，或选择自取。",
     needDate: "请选择至少两天后的日期。",
-    noDb: "此页面暂时无法下单。请使用店家邀请的 claude.ai 账号登录后再试。",
-    thanks: (n, id, p) => `谢谢您，${n}！订单 ${id} 已收到。我们会通过 ${p} 联系您确认。`,
-    denied: "您的账号暂时无法下单。请让店家以“参与者”权限把此页面分享给您。",
-    failed: "订单未能保存。请检查网络后再次点击“提交订单”。",
-    loadingMine: "正在加载您的订单…", unreachMine: "暂时无法加载您的订单。",
-    noneMine: "还没有订单。下单后会显示在这里。",
-    loadingAll: "正在加载订单…", unreachAll: "暂时无法连接订单，连接恢复后会自动显示。",
-    noneAll: "还没有订单。新订单会按烘焙日期从近到远显示在这里。",
-    loadFail: "订单加载失败。",
-    order: "订单", notes: "备注：",
+    notes: "备注：",
     when: (method, addr, date) => date + " " + (method === "delivery" ? "送货至 " + addr : "自取"),
-    status: { new: "新订单", confirmed: "已确认", ready: "可取货", done: "已取货" },
-    mark: s => "标记为" + s, retry: "更新失败，请重试",
     locale: "zh-Hans-MY",
   },
 };
@@ -543,7 +475,6 @@ const MENU = [
     en: { name: "Kek Lapis (Layer Cake)", desc: "Thin layers baked one at a time, with a caramelised top.", unit: "Per cake" },
     zh: { name: "千层糕", desc: "一层一层慢慢烤成，表面焦香。", unit: "每条" } },
 ];
-const STATUSES = ["new", "confirmed", "ready", "done"];
 const money = n => "RM " + n.toFixed(2);
 const priceText = m => m.price == null ? t("priceSoon") : money(m.price);
 const byId = Object.fromEntries(MENU.map(m => [m.id, m]));
@@ -651,9 +582,6 @@ const itemText = (id, fallback) => (byId[id] ? byId[id][lang] : { name: fallback
 let cart = {};
 let fresh = null;
 let hopId = null;
-let db = null, me = null, isBaker = false;
-let busy = false;
-let mineDocs = null, allDocs = null, mineState = "loading", allState = "loading";
 
 function applyStatic() {
   document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
@@ -735,7 +663,7 @@ function renderSlip() {
   $("#cartCount").textContent = n;
   $("#cartCount").hidden = !n;
   $("#jump").classList.toggle("on", ids.length > 0);
-  $("#placeBtn").disabled = !ids.length || busy;
+  $("#placeBtn").disabled = !ids.length;
 }
 
 function setQty(id, d, zone) {
@@ -761,7 +689,7 @@ function renderStamp() {
 }
 
 function renderAll() {
-  applyStatic(); renderMenu(); renderSlip(); renderStamp(); renderPay(); renderMine(); renderBaker();
+  applyStatic(); renderMenu(); renderSlip(); renderStamp(); renderPay();
   if (lastMsg) showMsg(lastMsg.kind, lastMsg.key, lastMsg.args);
 }
 
@@ -800,41 +728,52 @@ function showMsg(kind, key, args) {
   m.className = "msg " + kind; m.textContent = typeof v === "function" ? v(...args) : v; m.hidden = false;
 }
 
-$("#orderForm").addEventListener("submit", async e => {
+// ---------- Orders go to the bakery's WhatsApp, written out in full
+const WHATSAPP = "60167930666";   // 016-793 0666
+const waLink = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+
+let sent = null;   // { ref, total, text } once an order has been sent, while the pay view is open
+
+function orderText(ref, o) {
+  const L = T[lang];
+  return [
+    L.waHello,
+    ...o.items.map(i => `• ${i.qty} × ${itemText(i.id).name} (${itemText(i.id).unit}): ${money(i.price * i.qty)}`),
+    `${L.total}: ${money(o.total)}`,
+    "",
+    `${L.waName}: ${o.name}`,
+    L.when(o.method, o.address, o.when),
+    ...(o.notes ? [L.notes + o.notes] : []),
+    `${L.waRef}: ${ref}`,
+  ].join("\n");
+}
+
+$("#orderForm").addEventListener("submit", e => {
   e.preventDefault();
-  const name = $("#cName").value.trim(), phone = $("#cPhone").value.trim();
+  const name = $("#cName").value.trim();
   const method = $("#mDelivery").checked ? "delivery" : "pickup";
   const addr = $("#cAddr").value.trim(), date = $("#cDate").value, notes = $("#cNotes").value.trim();
   if (!Object.keys(cart).length) return showMsg("warn", "needItem");
-  if (!name || !phone) return showMsg("warn", "needContact");
+  if (!name) return showMsg("warn", "needContact");
   if (method === "delivery" && !addr) return showMsg("warn", "needAddr");
   if (!date || date < $("#cDate").min) return showMsg("warn", "needDate");
-  if (!db || !me) return showMsg("warn", "noDb");
 
-  const oid = "o" + Date.now().toString(36);
+  const ref = Date.now().toString(36).slice(-6).toUpperCase();
   const order = {
-    name, phone, method, address: method === "delivery" ? addr : "", date, notes, lang,
-    items: Object.entries(cart).map(([id, qty]) => ({ id, name: byId[id].en.name, price: byId[id].price, qty })),
-    total: cartTotal(), currency: "MYR", status: "new", placedAt: new Date().toISOString(),
-    payment: { method: "tng", status: "unpaid", ref: "" },
+    name, method, address: method === "delivery" ? addr : "", notes,
+    when: new Date(date + "T00:00").toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "short" }),
+    items: Object.entries(cart).map(([id, qty]) => ({ id, qty, price: byId[id].price })),
+    total: cartTotal(),
   };
-  busy = true; renderSlip();
-  try {
-    const ref = db.doc("orders/" + me);
-    const snap = await ref.get();
-    if (snap.exists) await ref.update({ [oid]: order });
-    else await ref.set({ [oid]: order });
-    cart = {}; $("#cNotes").value = ""; $("#formMsg").hidden = true; lastMsg = null;
-    renderMenu();
-    openPay(oid, order.total);
-  } catch (err) {
-    showMsg("warn", err && err.code === "permission_denied" ? "denied" : "failed");
-  } finally { busy = false; renderSlip(); }
+  sent = { ref, total: order.total, text: orderText(ref, order) };
+  window.open(waLink(sent.text), "_blank", "noopener");
+
+  cart = {}; $("#cNotes").value = ""; $("#formMsg").hidden = true; lastMsg = null;
+  renderMenu(); renderSlip(); renderPay();
+  $("#order").scrollIntoView({ block: "start" });
 });
 
 // ---------- Touch 'n Go eWallet QR payment (payee: JMCO Trading)
-let paying = null;      // { oid, total } while the pay view is open
-let payMsg = null;
 let qrOk = false;
 (function findQr() {
   const im = new Image();
@@ -842,152 +781,22 @@ let qrOk = false;
   im.src = "payment-qr.png";
 })();
 
-const shortId = oid => oid.slice(1).toUpperCase();
-
-function openPay(oid, total) {
-  paying = { oid, total }; payMsg = null;
-  $("#payRef").value = "";
-  renderPay();
-  $("#order").scrollIntoView({ block: "start" });
-}
-
-function closePay() {
-  paying = null; payMsg = null;
-  renderPay();
-}
-
-function showPayMsg(kind, key, args) {
-  payMsg = { kind, key, args };
-  renderPay();
-}
-
 function renderPay() {
-  const chit = $("#order");
-  chit.classList.toggle("paying", !!paying);
-  $("#payBox").hidden = !paying;
-  if (!paying) { $("#slipTitle").textContent = t("navOrder"); return; }
-  const id = shortId(paying.oid), done = payMsg && payMsg.kind === "ok";
-  $("#slipTitle").textContent = T[lang].payH(id);
-  $("#payTotal").textContent = money(paying.total);
-  $("#payOrderId").textContent = id;
+  $("#order").classList.toggle("paying", !!sent);
+  $("#payBox").hidden = !sent;
+  if (!sent) { $("#slipTitle").textContent = t("navOrder"); return; }
+  $("#slipTitle").textContent = T[lang].payH(sent.ref);
+  $("#payTotal").textContent = money(sent.total);
+  $("#payOrderId").textContent = sent.ref;
   $("#qrImg").alt = t("qrAlt");
-  $("#qrBox").hidden = !qrOk || done;
-  $("#qrHow").hidden = !qrOk || done;
-  $("#qrMissing").hidden = qrOk || done;
-  $("#paidForm").querySelector(".field").hidden = done;
-  $("#paidBtn").hidden = done;
-  const m = $("#payMsg");
-  m.hidden = !payMsg;
-  if (payMsg) { const v = T[lang][payMsg.key]; m.className = "msg " + payMsg.kind; m.textContent = typeof v === "function" ? v(...payMsg.args) : v; }
+  $("#qrBox").hidden = !qrOk;
+  $("#qrHow").hidden = !qrOk;
+  $("#qrMissing").hidden = qrOk;
+  $("#receiptLink").href = waLink(T[lang].waReceipt(sent.ref, money(sent.total)));
+  $("#resendLink").href = waLink(sent.text);
 }
 
-$("#paidForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!paying) return;
-  const ref = $("#payRef").value.trim();
-  if (!ref) return showPayMsg("warn", "needRef");
-  if (!db || !me) return showPayMsg("warn", "noDb");
-  const { oid } = paying;
-  $("#paidBtn").disabled = true;
-  try {
-    await db.doc("orders/" + me).update({ [oid]: { payment: { method: "tng", status: "submitted", ref, submittedAt: new Date().toISOString() } } });
-    showPayMsg("ok", "paidThanks", [shortId(oid)]);
-  } catch (err) {
-    showPayMsg("warn", err && err.code === "permission_denied" ? "denied" : "paidFailed");
-  } finally { $("#paidBtn").disabled = false; }
-});
-
-$("#newOrder").addEventListener("click", () => { closePay(); $("#menu").scrollIntoView(); });
-
-function orderCard(o, oid, uid, forBaker) {
-  const el = document.createElement("div");
-  el.className = "order";
-  const items = (o.items || []).map(i => `${i.qty} × ${itemText(i.id, i.name).name}`).join(", ");
-  const when = new Date(o.date + "T00:00").toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "short" });
-  const st = T[lang].status;
-  const pay = o.payment && o.payment.status, ps = T[lang].payState;
-  el.innerHTML = `<div class="top"><span class="who"></span><span class="pills">${pay ? `<span class="pill ${pay}">${ps[pay] || pay}</span>` : ""}<span class="pill ${o.status}">${st[o.status] || o.status}</span></span></div>
-    <div class="detail d1"></div><div class="detail d2"></div><div class="detail d3"></div><div class="detail d4"></div>`;
-  el.querySelector(".who").textContent = forBaker ? `${o.name} · ${o.phone}` : `${t("order")} ${oid.slice(1).toUpperCase()}`;
-  el.querySelector(".d1").textContent = items + " · " + money(o.total || 0);
-  el.querySelector(".d2").textContent = T[lang].when(o.method, o.address, when);
-  el.querySelector(".d3").textContent = o.notes ? t("notes") + o.notes : "";
-  if (pay && o.payment.ref) {
-    el.querySelector(".d4").textContent = t("payRefShown") + o.payment.ref + (forBaker && pay === "submitted" ? " · " + T[lang].checkHint(money(o.total || 0), shortId(oid)) : "");
-  }
-  const box = document.createElement("div"); box.className = "actions";
-  if (!forBaker && pay === "unpaid") {
-    const b = document.createElement("button"); b.type = "button";
-    b.textContent = t("payNow");
-    b.addEventListener("click", () => openPay(oid, o.total || 0));
-    box.appendChild(b);
-  }
-  if (forBaker && pay && pay !== "paid") {
-    const b = document.createElement("button"); b.type = "button";
-    b.textContent = t("markPaid");
-    b.addEventListener("click", async () => {
-      b.disabled = true;
-      try { await db.doc("orders/" + uid).update({ [oid]: { payment: { ...o.payment, status: "paid", paidAt: new Date().toISOString() } } }); }
-      catch { b.disabled = false; b.textContent = t("retry"); }
-    });
-    box.appendChild(b);
-  }
-  if (forBaker) {
-    const next = STATUSES[STATUSES.indexOf(o.status) + 1];
-    if (next) {
-      const b = document.createElement("button"); b.type = "button";
-      b.textContent = T[lang].mark(st[next]);
-      b.addEventListener("click", async () => {
-        b.disabled = true;
-        try { await db.doc("orders/" + uid).update({ [oid]: { status: next } }); }
-        catch { b.disabled = false; b.textContent = t("retry"); }
-      });
-      box.appendChild(b);
-    }
-  }
-  if (box.children.length) el.appendChild(box);
-  return el;
-}
-
-function flatten(data) {
-  return Object.entries(data || {}).filter(([, o]) => o && typeof o === "object" && o.items);
-}
-
-function renderMine() {
-  if ($("#myOrders").hidden) return;
-  const list = $("#myOrderList");
-  if (mineState !== "ready") { list.innerHTML = `<div class="empty">${t(mineState === "loading" ? "loadingMine" : "unreachMine")}</div>`; return; }
-  const rows = flatten(mineDocs).sort((a, b) => b[1].placedAt.localeCompare(a[1].placedAt));
-  list.innerHTML = rows.length ? "" : `<div class="empty">${t("noneMine")}</div>`;
-  rows.forEach(([oid, o]) => list.appendChild(orderCard(o, oid, me, false)));
-}
-
-function renderBaker() {
-  if ($("#bakerPanel").hidden) return;
-  const list = $("#bakerList");
-  if (allState !== "ready") { list.innerHTML = `<div class="empty">${t({ loading: "loadingAll", unreach: "unreachAll", fail: "loadFail" }[allState])}</div>`; return; }
-  const rows = [];
-  allDocs.forEach(d => flatten(d.data()).forEach(([oid, o]) => rows.push([oid, o, d.id])));
-  rows.sort((a, b) => (a[1].status === "done") - (b[1].status === "done") || a[1].date.localeCompare(b[1].date));
-  list.innerHTML = rows.length ? "" : `<div class="empty">${t("noneAll")}</div>`;
-  rows.forEach(([oid, o, uid]) => list.appendChild(orderCard(o, oid, uid, true)));
-}
-
-function watchMine() {
-  $("#myOrders").hidden = false; renderMine();
-  const timer = setTimeout(() => { if (mineState === "loading") { mineState = "unreach"; renderMine(); } }, 10000);
-  db.doc("orders/" + me).onSnapshot(snap => {
-    clearTimeout(timer); mineDocs = snap.data(); mineState = "ready"; renderMine();
-  }, () => { clearTimeout(timer); $("#myOrders").hidden = true; });
-}
-
-function watchBaker() {
-  $("#bakerPanel").hidden = false; renderBaker();
-  const timer = setTimeout(() => { if (allState === "loading") { allState = "unreach"; renderBaker(); } }, 10000);
-  db.collection("orders").onSnapshot(snap => {
-    clearTimeout(timer); allDocs = snap.docs; allState = "ready"; renderBaker();
-  }, () => { clearTimeout(timer); allState = "fail"; renderBaker(); });
-}
+$("#newOrder").addEventListener("click", () => { sent = null; renderPay(); $("#menu").scrollIntoView(); });
 
 renderAll();
 findPhotos();
@@ -997,14 +806,4 @@ if ("IntersectionObserver" in window) {
   new IntersectionObserver(([e]) => $("#jump").classList.toggle("away", e.isIntersecting)).observe($("#order"));
 }
 
-(async () => {
-  if (!window.claude || !window.claude.use) return;
-  const [dbNs, user] = await Promise.all([claude.use("db"), claude.use("user")]);
-  if (!dbNs || !user) return;
-  db = dbNs;
-  try { me = await user.id(); } catch { me = null; }
-  try { isBaker = !!(await user.isOwner()) || !!(await user.canEdit()); } catch { isBaker = false; }
-  if (me) watchMine();
-  if (isBaker) watchBaker();
-})();
 </script>
