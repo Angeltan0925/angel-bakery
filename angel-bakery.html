@@ -199,13 +199,14 @@
   .submit:disabled { opacity: 0.45; cursor: not-allowed; }
   .note { font-size: 0.85rem; opacity: 0.8; }
 
-  /* DuitNow payment step: replaces the cart lines and form once an order is placed */
+  /* Touch 'n Go eWallet payment step: replaces the cart lines and form once an order is placed */
   .chit.paying .lines, .chit.paying .total, .chit.paying #orderForm, .chit.paying .stamp { display: none; }
   .pay { display: grid; gap: 14px; }
   .pay-facts { margin: 0; display: grid; gap: 8px; }
   .pay-facts div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--chit-rule); }
   .pay-facts dt { font-size: 0.88rem; font-weight: 600; }
   .pay-facts dd { margin: 0; font-family: var(--display); font-weight: 700; font-size: 1.35rem; color: var(--stamp); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  .pay-facts dd.payee { font-family: var(--body); font-size: 1rem; color: var(--carbon); letter-spacing: 0; }
   .qr { margin: 0; display: grid; gap: 8px; justify-items: center; }
   .qr img { width: 100%; max-width: 240px; background: #fff; padding: 10px; border-radius: 6px; display: block; }
   .qr a { color: var(--carbon); font-weight: 700; }
@@ -357,22 +358,23 @@
         <div class="field"><label for="cNotes" data-t="fNotes">Notes (gift message, allergies)</label><textarea id="cNotes" data-tp="fNotesPh" placeholder="e.g. A gift for Grandma, no nuts please"></textarea></div>
         <div id="formMsg" class="msg" role="status" hidden></div>
         <button type="submit" class="submit" id="placeBtn" disabled data-t="place">Place order</button>
-        <p class="note" data-t="noPay">You'll pay by DuitNow QR on the next step.</p>
+        <p class="note" data-t="noPay">You'll pay with Touch 'n Go eWallet on the next step.</p>
       </form>
 
       <div class="pay" id="payBox" hidden>
         <dl class="pay-facts">
           <div><dt data-t="payAmt">Amount to pay</dt><dd id="payTotal"></dd></div>
           <div><dt data-t="payNoteLabel">Write this in the payment note</dt><dd id="payOrderId"></dd></div>
+          <div><dt data-t="payee">Payee</dt><dd class="payee">JMCO Trading</dd></div>
         </dl>
         <figure class="qr" id="qrBox">
-          <img id="qrImg" alt="DuitNow QR code for Angel Bakery">
-          <figcaption><a id="qrSave" href="duitnow-qr.png" download="angel-bakery-duitnow-qr.png" data-t="qrSave">Save QR to your phone</a></figcaption>
+          <img id="qrImg" alt="Touch 'n Go eWallet QR code for JMCO Trading">
+          <figcaption><a id="qrSave" href="payment-qr.png" download="angel-bakery-tng-qr.png" data-t="qrSave">Save QR to your phone</a></figcaption>
         </figure>
-        <p class="note" id="qrHow" data-t="qrHow">Scan with any Malaysian bank or e-wallet app.</p>
+        <p class="note" id="qrHow" data-t="qrHow">Scan with the Touch 'n Go eWallet app.</p>
         <p class="msg warn" id="qrMissing" data-t="qrMissing" hidden>The QR code isn't available right now. We'll message you with payment details.</p>
         <form id="paidForm" novalidate>
-          <div class="field"><label for="payRef" data-t="payRef">Payment reference number</label><input type="text" id="payRef" autocomplete="off" data-tp="payRefPh" placeholder="From your bank receipt"></div>
+          <div class="field"><label for="payRef" data-t="payRef">Payment reference number</label><input type="text" id="payRef" autocomplete="off" data-tp="payRefPh" placeholder="From your Touch 'n Go receipt"></div>
           <div id="payMsg" class="msg" role="status" hidden></div>
           <button type="submit" class="submit" id="paidBtn" data-t="paidBtn">I've paid</button>
         </form>
@@ -412,19 +414,19 @@ const T = {
     total: "Total", fName: "Your name", fPhone: "Phone or WhatsApp", fMethod: "Pickup or delivery",
     pickup: "Pickup", delivery: "Delivery", fAddr: "Delivery address", fDate: "Date",
     fNotes: "Notes (gift message, allergies)", fNotesPh: "e.g. A gift for Grandma, no nuts please",
-    place: "Place order and pay", noPay: "You'll pay by DuitNow QR on the next step.",
-    payH: id => `Pay for order ${id}`, payAmt: "Amount to pay", payNoteLabel: "Write this in the payment note",
-    qrSave: "Save QR to your phone", qrAlt: "DuitNow QR code for Angel Bakery",
-    qrHow: "Scan with any Malaysian bank or e-wallet app. Paying on this phone? Save the QR, then upload it in your app.",
+    place: "Place order and pay", noPay: "You'll pay with Touch 'n Go eWallet on the next step.",
+    payH: id => `Pay for order ${id}`, payAmt: "Amount to pay", payNoteLabel: "Write this in the payment note", payee: "Payee",
+    qrSave: "Save QR to your phone", qrAlt: "Touch 'n Go eWallet QR code for JMCO Trading",
+    qrHow: "Scan with the Touch 'n Go eWallet app. You'll see the payee name JMCO Trading. Paying on this phone? Save the QR, then upload it from your photos in the app's scanner.",
     qrMissing: "The QR code isn't available right now. We'll message you with payment details.",
-    payRef: "Payment reference number", payRefPh: "From your bank receipt",
-    needRef: "Enter the reference number from your payment receipt.",
-    paidBtn: "I've paid", newOrder: "Start a new order", payNow: "Pay with DuitNow",
+    payRef: "Transaction ID", payRefPh: "From your Touch 'n Go receipt",
+    needRef: "Enter the transaction ID from your Touch 'n Go receipt.",
+    paidBtn: "I've paid", newOrder: "Start a new order", payNow: "Pay with Touch 'n Go",
     paidThanks: id => `Thank you! We'll check your payment for order ${id} and message you to confirm.`,
-    paidFailed: "We couldn't save your reference. Check your connection and press I've paid again.",
+    paidFailed: "We couldn't save your transaction ID. Check your connection and press I've paid again.",
     payState: { unpaid: "Not paid", submitted: "Payment to check", paid: "Paid" },
-    payRefShown: "DuitNow ref: ", markPaid: "Mark paid",
-    checkHint: (amt, id) => `Check your bank app for ${amt} with note ${id} before marking it paid.`,
+    payRefShown: "Touch 'n Go transaction ID: ", markPaid: "Mark paid",
+    checkHint: (amt, id) => `Check your Touch 'n Go eWallet for ${amt} with note ${id} before marking it paid.`,
     foot1: "Every sweet comes from Angel", foot2: "Handmade and baked fresh to order",
     stampPick: "Pickup", stampDel: "Delivery",
     add: "Add to cart", less: "One less", more: "One more",
@@ -467,19 +469,19 @@ const T = {
     total: "总计", fName: "您的姓名", fPhone: "电话或 WhatsApp", fMethod: "自取或送货",
     pickup: "自取", delivery: "送货", fAddr: "送货地址", fDate: "日期",
     fNotes: "备注（送礼祝福语、过敏信息）", fNotesPh: "例如：送给奶奶的礼物，请不要放坚果",
-    place: "下单并付款", noPay: "下一步通过 DuitNow QR 付款。",
-    payH: id => `支付订单 ${id}`, payAmt: "应付金额", payNoteLabel: "请在转账备注填写",
-    qrSave: "保存 QR 到手机", qrAlt: "Angel Bakery 的 DuitNow QR 码",
-    qrHow: "用任何马来西亚银行或电子钱包 App 扫描。在同一部手机上付款？请先保存 QR，再在 App 里上传。",
+    place: "下单并付款", noPay: "下一步通过 Touch 'n Go eWallet 付款。",
+    payH: id => `支付订单 ${id}`, payAmt: "应付金额", payNoteLabel: "请在转账备注填写", payee: "收款人",
+    qrSave: "保存 QR 到手机", qrAlt: "JMCO Trading 的 Touch 'n Go eWallet QR 码",
+    qrHow: "请用 Touch 'n Go eWallet App 扫描，收款人显示为 JMCO Trading。在同一部手机上付款？请先保存 QR，再在 App 的扫描页从相册上传。",
     qrMissing: "QR 码暂时无法显示。我们会联系您提供付款资料。",
-    payRef: "付款参考编号", payRefPh: "见银行收据",
-    needRef: "请填写付款收据上的参考编号。",
-    paidBtn: "我已付款", newOrder: "开始新订单", payNow: "使用 DuitNow 付款",
+    payRef: "交易编号", payRefPh: "见 Touch 'n Go 收据",
+    needRef: "请填写 Touch 'n Go 收据上的交易编号。",
+    paidBtn: "我已付款", newOrder: "开始新订单", payNow: "使用 Touch 'n Go 付款",
     paidThanks: id => `谢谢您！我们会核对订单 ${id} 的付款，并联系您确认。`,
-    paidFailed: "参考编号未能保存。请检查网络后再次点击“我已付款”。",
+    paidFailed: "交易编号未能保存。请检查网络后再次点击“我已付款”。",
     payState: { unpaid: "未付款", submitted: "待核对付款", paid: "已付款" },
-    payRefShown: "DuitNow 参考编号：", markPaid: "标记为已付款",
-    checkHint: (amt, id) => `请先在银行 App 核对 ${amt}（备注 ${id}），再标记为已付款。`,
+    payRefShown: "Touch 'n Go 交易编号：", markPaid: "标记为已付款",
+    checkHint: (amt, id) => `请先在 Touch 'n Go eWallet 核对 ${amt}（备注 ${id}），再标记为已付款。`,
     foot1: "天使牌，用爱手作", foot2: "手工制作，接单新鲜烘焙",
     stampPick: "自取", stampDel: "送货",
     add: "加入购物车", less: "减一", more: "加一",
@@ -814,7 +816,7 @@ $("#orderForm").addEventListener("submit", async e => {
     name, phone, method, address: method === "delivery" ? addr : "", date, notes, lang,
     items: Object.entries(cart).map(([id, qty]) => ({ id, name: byId[id].en.name, price: byId[id].price, qty })),
     total: cartTotal(), currency: "MYR", status: "new", placedAt: new Date().toISOString(),
-    payment: { method: "duitnow", status: "unpaid", ref: "" },
+    payment: { method: "tng", status: "unpaid", ref: "" },
   };
   busy = true; renderSlip();
   try {
@@ -830,14 +832,14 @@ $("#orderForm").addEventListener("submit", async e => {
   } finally { busy = false; renderSlip(); }
 });
 
-// ---------- DuitNow QR payment
+// ---------- Touch 'n Go eWallet QR payment (payee: JMCO Trading)
 let paying = null;      // { oid, total } while the pay view is open
 let payMsg = null;
 let qrOk = false;
 (function findQr() {
   const im = new Image();
   im.onload = () => { qrOk = true; $("#qrImg").src = im.src; renderPay(); };
-  im.src = "duitnow-qr.png";
+  im.src = "payment-qr.png";
 })();
 
 const shortId = oid => oid.slice(1).toUpperCase();
@@ -888,7 +890,7 @@ $("#paidForm").addEventListener("submit", async e => {
   const { oid } = paying;
   $("#paidBtn").disabled = true;
   try {
-    await db.doc("orders/" + me).update({ [oid]: { payment: { method: "duitnow", status: "submitted", ref, submittedAt: new Date().toISOString() } } });
+    await db.doc("orders/" + me).update({ [oid]: { payment: { method: "tng", status: "submitted", ref, submittedAt: new Date().toISOString() } } });
     showPayMsg("ok", "paidThanks", [shortId(oid)]);
   } catch (err) {
     showPayMsg("warn", err && err.code === "permission_denied" ? "denied" : "paidFailed");
